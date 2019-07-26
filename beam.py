@@ -77,24 +77,35 @@ class Hatil:
     maximumShearForce=0
     necessaryStirrup=0
     deflection=0
-    def __init__(self, thickness): 
+    def __init__(self, thickness, location): 
         self.thickness = thickness
+        self.location = location
 
 class VerticalHatil(Hatil):
     length=0
     pointLoadFromHorizontalHatils=0
+    def __init__(self, thickness, location, length): 
+        self.thickness = thickness
+        self.location = location
+        self.length = length
+
 
 class HorizontalHatil(Hatil):
     leftLength=0
     rightLength=0
     linearLoadFromWall=0
+    def setLength(self, leftLength, rightLength):
+        self.leftLength = leftLength
+        self.rightLength = rightLength
 
 class Wall:
     density=0
     thickness=0
-    def __init__(self, thickness, density): 
+    width=0
+    def __init__(self, thickness, density, width): 
         self.thickness = thickness
         self.density = density
+        self.width = width
 
 class Plaster:
     density=0
@@ -106,14 +117,14 @@ class Plaster:
 class ReinforcedConcreteDensity:
     reinforcedConcreteDensity=0
     def __init__(self): 
-        self.reinforcedConcreteDensity = 2500
+        self.reinforcedConcreteDensity = 2.5
     def setDensity(self, newDensity):
         self.reinforcedConcreteDensity = newDensity
 
 class ConcreteCover:
     coverThickness=0
     def __init__(self, coverThickness):
-        self.coverThickness =coverThickness
+        self.coverThickness = coverThickness
 
 class HeightParameter:
     heightFromBasement=0
@@ -134,7 +145,7 @@ class Earthquake:
         self.A0 = A0
         self.I = I
 
-class Calculated:
+class CalculatedValues:
     wallLinearWeight = 0
     wallWeightPerUnitArea = 0 
     ratioOfSpans = 0
