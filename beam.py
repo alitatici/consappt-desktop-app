@@ -149,5 +149,6 @@ class CalculatedValues:
     wallLinearWeight = 0
     wallWeightPerUnitArea = 0 
     ratioOfSpans = 0
+    reinforcementAmount=0
 
 
