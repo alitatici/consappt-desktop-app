@@ -28,17 +28,28 @@ class GeneralCalculator:
         self.concreteCover = concreteCover
 
         self.calculateWallWeightPerUnitArea()
+        self.calculateWallWeightPerMeter()
         self.calculateWallLinearWeight()
         self.calculateLinearEquivalentEarthquakeLoad()
         self.calculateMomentAndShearForce()
         self.calculateDeflection()
         self.calculateNecessaryReinforcementArea()
-        self.calculateShearStirrup()
+        self.calculateShearStirrups()
 
 #weight per unit area of wall; plaster multiple with 2 beacuse of plaster uses both sides of wall. Result unit: t/m^2
     def calculateWallWeightPerUnitArea(self):
         self.calculatedValues.wallWeightPerUnitArea = (wall.thickness/100) * wall.density + 2*(plaster.thickness/100) * plaster.density
         print(self.calculatedValues.wallWeightPerUnitArea)
+
+#Weight per meter of wall. Result unit: t/m. 
+#This value must be lower than 0.7 t/m.
+    def calculateWallWeightPerMeter(self):
+        load = (wall.width - verticalHatil.thickness/100) * verticalHatil.length * self.calculatedValues.wallWeightPerUnitArea
+        load += verticalHatil.thickness/100 * wall.thickness/100 * verticalHatil.length * reinforcedConcreteDensity.reinforcedConcreteDensity
+        if load / wall.width > 0.7:
+            print("need support to bottom of wall. (>700kg/m)")
+        else:
+            print("ok. (<700 kg/m")
 
 #Calculation of We. Hatil's loads from wall and itself. Result unit: t/m
     def calculateWallLinearWeight(self):
@@ -136,12 +147,14 @@ class GeneralCalculator:
         print(self.calculatedValues.reinforcementAmount)
         
 #Calculations of stirrups. 
-    def calculateShearStirrup(self):
-        Vcr = 0.65 * self.concrete.fctd * self.verticalHatil.thickness * 10 * (wall.thickness * 10 - concreteCover * 10)
+    def calculateShearStirrups(self):
+        Vcr = 0.65 * self.concrete.fctd * self.verticalHatil.thickness * 10 * (wall.thickness * 10 - concreteCover.coverThickness * 10)
 
-        self.verticalHatil.necessaryStirrup = Vcr
-
-        print(self.verticalHatil.necessaryStirrup)
+        print(Vcr)
+        print(self.concrete.fctd)
+        print(self.verticalHatil.thickness)
+        print(wall.thickness)
+        print(concreteCover.coverThickness)
 
 
 verticalHatil = VerticalHatil(20, 4.1, 4)
