@@ -2,6 +2,7 @@ from tkinter import *
 from tkinter import ttk
 from ui_components.canvas import CanvasWall
 from beam import *
+from calculations import *
 import math
 
 
@@ -21,6 +22,23 @@ class Window:
 
     def zoom(self, evt):
         self.designFrame.set_zoom(self.var.get()/10)
+
+    def calculateProblem(self):
+        self.wall = Wall(float(self.wallThickness.get()), float(self.wallDensity.get()), float(self.wallWidth.get()))
+        self.verticalHatil = VerticalHatil(float(self.vhThickness.get()), float(self.vhLocation.get()), float(self.vhLength.get()))
+        self.concrete = Concrete(self.concreteVariable.get())
+        self.steel = ReinforcementSteel(self.steelVariable.get())
+        self.plaster = Plaster(float(self.pThickness.get()), float(self.pDensity.get()))
+        self.earthquake = Earthquake(float(self.eA0.get()), float(self.eI.get()))
+        self.reinforcedConcreteDensity = ReinforcedConcreteDensity()
+        self.concreteCover = ConcreteCover(float(self.ccT.get()))
+        self.heightParameter = HeightParameter(float(self.hpFromBasement.get()), float(self.hpMax.get()))
+        calculator = GeneralCalculator()
+        string = calculator.calculateNonHorizontal(self.verticalHatil, self.concrete, self.steel, self.wall, self.plaster,
+        self.earthquake, self.reinforcedConcreteDensity, self.concreteCover)
+        self.resultBox.delete(0, END)
+        self.resultBox.insert(INSERT, string)
+
 
 
     def __init__(self):
@@ -56,15 +74,7 @@ class Window:
             self.menubar.add_cascade(label="Help", menu=self.helpmenu)
 
             self.designFrame = CanvasWall()
-            self.wall = Wall(22.5, 0.5, 8.2)
-            self.verticalHatil = VerticalHatil(20, 4.1, 4)
-            self.concrete = Concrete("C25")
-            self.steel = ReinforcementSteel("S420")
-            self.plaster = Plaster(2, 1.8)
-            self.earthquake = Earthquake(0.4, 1)
-            self.reinforcedConcreteDensity = ReinforcedConcreteDensity()
-            self.concreteCover = ConcreteCover(3)
-            self.heightParameter = HeightParameter(-5, 10)
+
 
             # SETTINGS ENTRY
 
@@ -91,11 +101,11 @@ class Window:
             Label(self.wallEntry, text="Width").grid(row =1, column = 8, columnspan=2, sticky=W)
 
             self.wallThickness = Entry(self.wallEntry)
-            self.wallThickness.insert(END, "0")
+            self.wallThickness.insert(END, "22.5")
             self.wallDensity = Entry(self.wallEntry)
-            self.wallDensity.insert(END, "0")
+            self.wallDensity.insert(END, "0.5")
             self.wallWidth = Entry(self.wallEntry)
-            self.wallWidth.insert(END, "2")
+            self.wallWidth.insert(END, "8.2")
 
             self.wallThickness.grid(row=1, column=2, columnspan=2)
             self.wallDensity.grid(row=1, column=6, columnspan=2)
@@ -111,11 +121,11 @@ class Window:
             Label(self.verticalHatilEntry, text="Length").grid(row =1, column = 8, columnspan=2, sticky=W)
 
             self.vhThickness = Entry(self.verticalHatilEntry)
-            self.vhThickness.insert(END, "0")
+            self.vhThickness.insert(END, "20")
             self.vhLocation = Entry(self.verticalHatilEntry)
-            self.vhLocation.insert(END, "1")
+            self.vhLocation.insert(END, "4.1")
             self.vhLength = Entry(self.verticalHatilEntry)
-            self.vhLength.insert(END, "2")
+            self.vhLength.insert(END, "4")
 
             self.vhThickness.grid(row=1, column=2, columnspan=2)
             self.vhLocation.grid(row=1, column=6, columnspan=2)
@@ -126,7 +136,7 @@ class Window:
             self.concreteEntry = LabelFrame(self.root, text="Concrete")
             self.concreteEntry.grid(row =3, column = 3, sticky=W)
 
-            OPTIONS = [
+            OPTIONS_FOR_CONCRETE = [
                 "C20",
                 "C25",
                 "C30",
@@ -136,13 +146,13 @@ class Window:
                 "C50",
                 ]
 
-            variable = StringVar(self.concreteEntry)
-            variable.set(OPTIONS[0])
+            self.concreteVariable = StringVar(self.root)
+            self.concreteVariable.set(OPTIONS_FOR_CONCRETE[0])
             Label(self.concreteEntry, text="Type").grid(row =1, column = 0, columnspan=2,  sticky=W)
 
-            self.vhThickness = OptionMenu(self.concreteEntry, variable, *OPTIONS)
+            self.concreteMenu = OptionMenu(self.concreteEntry, self.concreteVariable, *OPTIONS_FOR_CONCRETE)
 
-            self.vhThickness.grid(row=1, column=2, columnspan=2)
+            self.concreteMenu.grid(row=1, column=2, columnspan=2)
 
 
             # STEEL ENTRY
@@ -150,19 +160,19 @@ class Window:
             self.steelEntry = LabelFrame(self.root, text="Steel")
             self.steelEntry.grid(row =4, column = 3, sticky=W)
 
-            OPTIONS = [
+            OPTIONS_FOR_STEEL = [
                 "S220",
                 "S420",
                 "S500"
                 ]
 
-            variable = StringVar(self.steelEntry)
-            variable.set(OPTIONS[0])
+            self.steelVariable = StringVar(self.root)
+            self.steelVariable.set(OPTIONS_FOR_STEEL[0])
             Label(self.steelEntry, text="Type").grid(row =1, column = 0, columnspan=2,  sticky=W)
 
-            self.vhThickness = OptionMenu(self.steelEntry, variable, *OPTIONS)
+            self.steelMenu = OptionMenu(self.steelEntry, self.steelVariable, *OPTIONS_FOR_STEEL)
 
-            self.vhThickness.grid(row=1, column=2, columnspan=2)
+            self.steelMenu.grid(row=1, column=2, columnspan=2)
 
             # PLASTER ENTRY
 
@@ -226,9 +236,22 @@ class Window:
             self.hpFromBasement.grid(row=1, column=2, columnspan=2)
             self.hpMax.grid(row=1, column=6, columnspan=2)
 
+            # CALCULATE - RESULT AREA
+
+            self.calculateResultFrame = LabelFrame(self.root, text="Calculation")
+            self.calculateResultFrame.grid(row =9, column = 3, sticky=W)
+
+
+            Button(self.calculateResultFrame, text="Calculate Problem", command = self.calculateProblem).grid(row =1, column = 0, columnspan=2,  sticky=W)
+
+
+            self.resultBox = Entry(self.calculateResultFrame)
+            self.resultBox.insert(END, "result...")
+
+            self.resultBox.grid(row=1, column=2, columnspan=2)
+            self.hpMax.grid(row=1, column=6, columnspan=2)
 
             self.root.bind("<KeyRelease>", self.func)
-
             self.root.config(menu=self.menubar)
             self.root.mainloop()
 
