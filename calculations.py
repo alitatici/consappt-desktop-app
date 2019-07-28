@@ -34,7 +34,7 @@ class GeneralCalculator:
         self.calculateMomentAndShearForce()
         self.calculateDeflection()
         result = self.calculateNecessaryReinforcementArea()
-        self.calculateShearStirrup()
+        self.calculateShearStirrups()
 
         return result
 
