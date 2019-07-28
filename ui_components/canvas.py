@@ -5,14 +5,13 @@ class CanvasWall(ttk.Frame):
 
     def __init__(self, isapp=True, name='canvaswall'):
         ttk.Frame.__init__(self, name=name)
-        self.pack(side=TOP, anchor=W)
         self.master.title('Consappt - Hatıl Calculation Program')
         self.isapp = isapp
 
         self.canvas = Canvas(width=600, height=600, relief=SUNKEN,
                              borderwidth=2)
         self.canvas.configure(background="white")
-        self.canvas.pack(side=TOP, anchor=W)
+        self.canvas.grid(row=0, column =0, rowspan = 60, columnspan=2)
 
         self.drawingFactor = 2
 
@@ -43,6 +42,8 @@ class CanvasWall(ttk.Frame):
             'active': {'fill': 'red'}}
 
         self.canvas.wallInfo = wall
+
+
 
     def _define_vertical_hatil(self):
         verticalHatil = {
@@ -112,6 +113,17 @@ class CanvasWall(ttk.Frame):
             self.canvas.move('wallHeight', 0, (10*df*(v['wallHeight'] - newHeight/df)))
             v['wallHeight'] = newHeight/df
 
+    def set_wallHeight(self, height):
+        v = self.canvas.wallInfo
+        if height < 2:
+            v['wallHeight'] = 2
+        elif height > 20:
+            v['wallHeight'] = 20
+        else:
+            v['wallHeight'] = height
+        self._wall_setup(None)
+        
+
     def _move_wallWidth(self, evt):
         # handle drag of width reshape wall
         # limited to horizontal motion
@@ -130,6 +142,16 @@ class CanvasWall(ttk.Frame):
             if v['wallWidth'] < vH['x']:
                 vH['x'] = v['wallWidth']
 
+    def set_wallWidth(self, width):
+        v = self.canvas.wallInfo
+        if width < 2:
+            v['wallWidth'] = 2
+        elif width > 20:
+            v['wallWidth'] = 20
+        else:
+            v['wallWidth'] = width
+        self._wall_setup(None)
+
     def _move_verticalHatil(self, evt):
         # handle drag of width reshape wall
         # limited to horizontal motion
@@ -146,6 +168,23 @@ class CanvasWall(ttk.Frame):
         if newPos != vH['x']:
             self.canvas.move('verticalHatil', -10*df*(vH['x'] - newPos/df), 0)
             vH['x'] = newPos/df
+
+    def set_verticalHatilPos(self, pos):
+        vH = self.canvas.verticalHatilInfo
+        v = self.canvas.wallInfo
+        vH['x'] = pos
+        if pos < 0:
+            vH['x'] = 0
+        elif pos > v['wallWidth']:
+            vH['x'] = 20
+        else:
+            vH['x'] = pos
+        self._wall_setup(None)
+
+    def set_zoom(self, zoomFactor):
+        self.drawingFactor = zoomFactor
+        self._wall_setup(None)
+
 
     def _box_enter(self, evt):
         # set fill colour to 'active' style
