@@ -33,8 +33,10 @@ class GeneralCalculator:
         self.calculateLinearEquivalentEarthquakeLoad()
         self.calculateMomentAndShearForce()
         self.calculateDeflection()
-        self.calculateNecessaryReinforcementArea()
+        result = self.calculateNecessaryReinforcementArea()
         self.calculateShearStirrups()
+
+        return result
 
 #weight per unit area of wall; plaster multiple with 2 beacuse of plaster uses both sides of wall. Result unit: t/m^2
     def calculateWallWeightPerUnitArea(self):
@@ -146,6 +148,7 @@ class GeneralCalculator:
             self.calculatedValues.reinforcementAmount = "not found for "+str(temp)+" cm^2"
 
         print(self.calculatedValues.reinforcementAmount)
+        return self.calculatedValues.reinforcementAmount
         
 #Calculations of stirrups. 
     def calculateShearStirrups(self):
