@@ -85,6 +85,7 @@ class GeneralCalculator:
         temp2 = verticalHatil.linearEquivalentEarthquakeLoad * 9.81 * verticalHatil.length / 2
         self.verticalHatil.maximumMoment = temp
         self.verticalHatil.maximumShearForce = temp2
+
         print(self.verticalHatil.maximumMoment)
         print(self.verticalHatil.maximumShearForce)
 
@@ -148,14 +149,25 @@ class GeneralCalculator:
         
 #Calculations of stirrups. 
     def calculateShearStirrups(self):
-        Vcr = 0.65 * self.concrete.fctd * self.verticalHatil.thickness * 10 * (wall.thickness * 10 - concreteCover.coverThickness * 10)
+        Vcr = 0.65 * self.concrete.fctd * self.verticalHatil.thickness * 10 * (wall.thickness * 10 - concreteCover.coverThickness * 10) / 1000
+        #This 8, comes from ø8.
+        temp = 2 * (pow(8,2) * math.pi / 4) * steel.fyd / (0.3 * concrete.fctd * self.verticalHatil.thickness * 10) / 10
+        smax = round(temp,0)
+        halfd = round(((wall.thickness - concreteCover.coverThickness) / 2),0)
+        Vres = 0.22 * concrete.fcd * self.verticalHatil.thickness * (wall.thickness - concreteCover.coverThickness)
+        Vc = 0.8 * Vcr
 
-        print(Vcr)
-        print(self.concrete.fctd)
-        print(self.verticalHatil.thickness)
-        print(wall.thickness)
-        print(concreteCover.coverThickness)
-
+        if self.verticalHatil.maximumShearForce <= Vcr:
+            #Minimum stirrups use.
+            if halfd < smax:
+                print(halfd)
+            else:
+                print(smax)
+        elif self.verticalHatil.maximumShearForce > Vcr:
+            if self.verticalHatil.maximumShearForce > Vres:
+                print("Hatil's size must extend")
+            #else:
+                
 
 verticalHatil = VerticalHatil(20, 4.1, 4)
 concrete = Concrete("C25")
