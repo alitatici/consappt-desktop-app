@@ -160,15 +160,15 @@ class GeneralCalculator:
         Vres = 0.22 * concrete.fcd * self.verticalHatil.thickness * (wall.thickness - concreteCover.coverThickness)
         Vc = 0.8 * Vcr
 
-        if self.verticalHatil.maximumShearForce <= Vcr:
+        #if self.verticalHatil.maximumShearForce <= Vcr:
             #Minimum stirrups use.
-            if halfd < smax:
-                print(halfd)
-            else:
-                print(smax)
-        elif self.verticalHatil.maximumShearForce > Vcr:
-            if self.verticalHatil.maximumShearForce > Vres:
-                print("Hatil's size must extend")
+           # if halfd < smax:
+              #  print(halfd)
+           # else:
+               # print(smax)
+      #  elif self.verticalHatil.maximumShearForce > Vcr:
+           # if self.verticalHatil.maximumShearForce > Vres:
+              #  print("Hatil's size must extend")
             #else:
                 
 
