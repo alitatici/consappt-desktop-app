@@ -11,6 +11,7 @@ class GeneralCalculator:
     reinforcedConcreteDensity = None
     concreteCover = None
     calculatedValues = None
+    ReinforcementSteel = None
     
 
     def __init__(self):
@@ -120,61 +121,184 @@ class GeneralCalculator:
         self.verticalHatil.necessaryReinforcementArea = temp
         print(self.verticalHatil.necessaryReinforcementArea)
 
-        if temp < 1.57:
-            self.calculatedValues.reinforcementAmount = "2ø10"
-        elif temp >= 1.57 and temp < 2.26:
-            self.calculatedValues.reinforcementAmount = "2ø12"
-        elif temp >= 2.26 and temp < 2.36:
-            self.calculatedValues.reinforcementAmount = "3ø10"
-        elif temp >= 2.36 and temp < 3.08:
-            self.calculatedValues.reinforcementAmount = "2ø14"
-        elif temp >= 3.08 and temp < 3.14:
-            self.calculatedValues.reinforcementAmount = "4ø10"
-        elif temp >= 3.14 and temp < 3.39:
-            self.calculatedValues.reinforcementAmount = "3ø12"
-        elif temp >= 3.39 and temp < 4.02:
-            self.calculatedValues.reinforcementAmount = "2ø16"
-        elif temp >= 4.02 and temp < 4.52:
-            self.calculatedValues.reinforcementAmount = "4ø12"
-        elif temp >= 4.52 and temp < 4.62:
-            self.calculatedValues.reinforcementAmount = "3ø14"
-        elif temp >= 4.62 and temp < 6.03:
-            self.calculatedValues.reinforcementAmount = "3ø16"
-        elif temp >= 6.03 and temp < 6.16:
-            self.calculatedValues.reinforcementAmount = "4ø14"
-        elif temp >= 6.16 and temp < 8.04:
-            self.calculatedValues.reinforcementAmount = "4ø16"
-        else:
-            self.calculatedValues.reinforcementAmount = "not found for "+str(temp)+" cm^2"
+                            # if temp < 1.57:
+                            #     self.calculatedValues.reinforcementAmount = "2ø10"
+                            # elif temp >= 1.57 and temp < 2.26:
+                            #     self.calculatedValues.reinforcementAmount = "2ø12"
+                            # elif temp >= 2.26 and temp < 2.36:
+                            #     self.calculatedValues.reinforcementAmount = "3ø10"
+                            # elif temp >= 2.36 and temp < 3.08:
+                            #     self.calculatedValues.reinforcementAmount = "2ø14"
+                            # elif temp >= 3.08 and temp < 3.14:
+                            #     self.calculatedValues.reinforcementAmount = "4ø10"
+                            # elif temp >= 3.14 and temp < 3.39:
+                            #     self.calculatedValues.reinforcementAmount = "3ø12"
+                            # elif temp >= 3.39 and temp < 4.02:
+                            #     self.calculatedValues.reinforcementAmount = "2ø16"
+                            # elif temp >= 4.02 and temp < 4.52:
+                            #     self.calculatedValues.reinforcementAmount = "4ø12"
+                            # elif temp >= 4.52 and temp < 4.62:
+                            #     self.calculatedValues.reinforcementAmount = "3ø14"
+                            # elif temp >= 4.62 and temp < 6.03:
+                            #     self.calculatedValues.reinforcementAmount = "3ø16"
+                            # elif temp >= 6.03 and temp < 6.16:
+                            #     self.calculatedValues.reinforcementAmount = "4ø14"
+                            # elif temp >= 6.16 and temp < 8.04:
+                            #     self.calculatedValues.reinforcementAmount = "4ø16"
+                            # else:
+                            #     self.calculatedValues.reinforcementAmount = "not found for "+str(temp)+" cm^2"
+
+        if steel.longitudinalReinforcementDiameter == "ø8" or steel.longitudinalReinforcementDiameter == "ø10":
+            if temp < 1.57:
+                self.calculatedValues.reinforcementAmount = "2ø10"
+            elif temp >= 1.57 and temp < 2.26:
+                self.calculatedValues.reinforcementAmount = "2ø12"
+            elif temp >= 2.26 and temp < 2.36:
+                self.calculatedValues.reinforcementAmount = "3ø10"
+            elif temp >= 2.36 and temp < 3.08:
+                self.calculatedValues.reinforcementAmount = "2ø14"
+            elif temp >= 3.08 and temp < 3.14:
+                self.calculatedValues.reinforcementAmount = "4ø10"
+            elif temp >= 3.14 and temp < 3.39:
+                self.calculatedValues.reinforcementAmount = "3ø12"
+            elif temp >= 3.39 and temp < 4.02:
+                self.calculatedValues.reinforcementAmount = "2ø16"
+            elif temp >= 4.02 and temp < 4.52:
+                self.calculatedValues.reinforcementAmount = "4ø12"
+            elif temp >= 4.52 and temp < 4.62:
+                self.calculatedValues.reinforcementAmount = "3ø14"
+            elif temp >= 4.62 and temp < 6.03:
+                self.calculatedValues.reinforcementAmount = "3ø16"
+            elif temp >= 6.03 and temp < 6.16:
+                self.calculatedValues.reinforcementAmount = "4ø14"
+            elif temp >= 6.16 and temp < 8.04:
+                self.calculatedValues.reinforcementAmount = "4ø16"
+            else:
+                self.calculatedValues.reinforcementAmount = "not found for "+str(temp)+" cm^2"
+
+        elif steel.longitudinalReinforcementDiameter == "ø12":
+            if temp < 2.26:
+	            self.calculatedValues.reinforcementAmount = "2ø12"
+            elif temp >= 2.26 and temp < 3.08:
+                self.calculatedValues.reinforcementAmount = "2ø14"
+            elif temp >= 3.08 and temp < 3.39:
+                self.calculatedValues.reinforcementAmount = "3ø12"
+            elif temp >= 3.39 and temp < 4.02:
+                self.calculatedValues.reinforcementAmount = "2ø16"
+            elif temp >= 4.02 and temp < 4.52:
+                self.calculatedValues.reinforcementAmount = "4ø12"
+            elif temp >= 4.52 and temp < 4.62:
+                self.calculatedValues.reinforcementAmount = "3ø14"
+            elif temp >= 4.62 and temp < 6.03:
+                self.calculatedValues.reinforcementAmount = "3ø16"
+            elif temp >= 6.03 and temp < 6.16:
+                self.calculatedValues.reinforcementAmount = "4ø14"
+            elif temp >= 6.16 and temp < 8.04:
+                self.calculatedValues.reinforcementAmount = "4ø16"
+            else:
+                self.calculatedValues.reinforcementAmount = "not found for "+str(temp)+" cm^2"
+
+        elif steel.longitudinalReinforcementDiameter == "ø14":
+            if temp < 3.08:
+                self.calculatedValues.reinforcementAmount = "2ø14"
+            elif temp >= 3.08 and temp < 4.02:
+                self.calculatedValues.reinforcementAmount = "2ø16"
+            elif temp >= 4.02 and temp < 4.62:
+                self.calculatedValues.reinforcementAmount = "3ø14"
+            elif temp >= 4.62 and temp < 6.03:
+                self.calculatedValues.reinforcementAmount = "3ø16"
+            elif temp >= 6.03 and temp < 6.16:
+                self.calculatedValues.reinforcementAmount = "4ø14"
+            elif temp >= 6.16 and temp < 8.04:
+                self.calculatedValues.reinforcementAmount = "4ø16"
+            else:
+                self.calculatedValues.reinforcementAmount = "not found for "+str(temp)+" cm^2"
+        
+        elif steel.longitudinalReinforcementDiameter == "ø16":
+            if temp < 4.02:
+	            self.calculatedValues.reinforcementAmount = "2ø16"
+            elif temp >= 4.02 and temp < 6.03:
+	            self.calculatedValues.reinforcementAmount = "3ø16"
+            elif temp >= 6.03 and temp < 8.04:
+	            self.calculatedValues.reinforcementAmount = "4ø16"
+            else:
+	            self.calculatedValues.reinforcementAmount = "not found for "+str(temp)+" cm^2"
 
         print(self.calculatedValues.reinforcementAmount)
         return self.calculatedValues.reinforcementAmount
         
-#Calculations of stirrups. 
+                    # #Calculations of stirrups. 
+                    #     def calculateShearStirrups(self):
+                    #         Vcr = 0.65 * self.concrete.fctd * self.verticalHatil.thickness * 10 * (wall.thickness * 10 - concreteCover.coverThickness * 10) / 1000
+                    #         #This 8, comes from ø8.
+                    #         temp = 2 * (pow(8,2) * math.pi / 4) * steel.fyd / (0.3 * concrete.fctd * self.verticalHatil.thickness * 10) / 10
+                    #         smax = round(temp,0)
+                    #         halfd = round(((wall.thickness - concreteCover.coverThickness) / 2),0)
+                    #         Vres = 0.22 * concrete.fcd * self.verticalHatil.thickness * (wall.thickness - concreteCover.coverThickness)
+                    #         Vc = 0.8 * Vcr
+
+                            #if self.verticalHatil.maximumShearForce <= Vcr:
+                                #Minimum stirrups use.
+                            # if halfd < smax:
+                                #  print(halfd)
+                            # else:
+                                # print(smax)
+                        #  elif self.verticalHatil.maximumShearForce > Vcr:
+                            # if self.verticalHatil.maximumShearForce > Vres:
+                                #  print("Hatil's size must extend")
+                                #else:
+                
+#Calculations of stirrups.
     def calculateShearStirrups(self):
         Vcr = 0.65 * self.concrete.fctd * self.verticalHatil.thickness * 10 * (wall.thickness * 10 - concreteCover.coverThickness * 10) / 1000
-        #This 8, comes from ø8.
-        temp = 2 * (pow(8,2) * math.pi / 4) * steel.fyd / (0.3 * concrete.fctd * self.verticalHatil.thickness * 10) / 10
-        smax = round(temp,0)
-        halfd = round(((wall.thickness - concreteCover.coverThickness) / 2),0)
+        temp = 2 * (pow(steel.stirrupDiameter,2) * math.pi / 4) * steel.fyd / (0.3 * concrete.fctd * self.verticalHatil.thickness * 10)
+        smaxWhat = round(temp,0)
+        if smaxWhat > round(temp,0):
+            smax = round(temp,0) + 1
+        else:
+            smax = round(temp,0)
+            
+        temp2 = round(((wall.thickness - concreteCover.coverThickness) / 2),0)
+        halfdWhat = round(temp2,0)
+        if halfdWhat > round(temp2,0):
+            halfd = round(temp2,0) + 1
+        else:
+            halfd = round(temp2,0)
+            
         Vres = 0.22 * concrete.fcd * self.verticalHatil.thickness * (wall.thickness - concreteCover.coverThickness)
         Vc = 0.8 * Vcr
+        Vw = self.verticalHatil.maximumShearForce - Vc
+        
+        if self.verticalHatil.maximumShearForce <= Vcr:
+        #Minimum stirrups use.
+            if halfd < smax:
+                print(steel.stirrupDiameter, halfd)
+            else:
+                print(steel.stirrupDiameter, smax)
+        elif self.verticalHatil.maximumShearForce > Vcr:
+        #else:
+            if self.verticalHatil.maximumShearForce > Vres:
+                print("Hatil's sizes must extend")
+            else:
+            #s 10'dan küçük olamaz!
+                for x in range(steel.stirrupDiameter, 1.6, 0.2):
+                    s = 2 * (pow(x,2) * math.pi /4) * steel.fyd * (wall.thickness - concreteCover.coverThickness) / (Vw * 1000)
 
-        #if self.verticalHatil.maximumShearForce <= Vcr:
-            #Minimum stirrups use.
-           # if halfd < smax:
-              #  print(halfd)
-           # else:
-               # print(smax)
-      #  elif self.verticalHatil.maximumShearForce > Vcr:
-           # if self.verticalHatil.maximumShearForce > Vres:
-              #  print("Hatil's size must extend")
-            #else:
-                
+                    if s >= 10:
+                        if halfd < smax:
+                            if s < halfd:
+                                print(x, halfd)
+                            else:
+                                print(x, s)
+                        else:
+                            print(x, smax)
+                        break
+                    else:
+                        continue
 
 verticalHatil = VerticalHatil(20, 4.1, 4)
 concrete = Concrete("C25")
-steel = ReinforcementSteel("S420")
+steel = ReinforcementSteel("S420", "ø10", "ø8", 10)
 wall = Wall(22.5, 0.5, 8.2)
 plaster = Plaster(2, 1.8)
 earthquake = Earthquake(0.4, 1)

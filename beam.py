@@ -55,16 +55,49 @@ class Concrete:
 class ReinforcementSteel:
     reinforcementSteelType=0
     fyd=0
+    minimumLongitudinalReinforcementDiameter = 0
+    minimumStirrupReinforcementDiameter = 0
+    minimumDistanceBetweenStirrups = 0
+    longitudinalReinforcementDiameter = 0
+    stirrupDiameter = 0
 
-# parameterized constructor 
-    def __init__(self, reinforcementSteelType): 
+    # parameterized constructor 
+    def __init__(self, reinforcementSteelType, minimumLongitudinalReinforcementDiameter, minimumStirrupReinforcementDiameter, minimumDistanceBetweenStirrups): 
         self.reinforcementSteelType = reinforcementSteelType
+        self.minimumLongitudinalReinforcementDiameter = minimumLongitudinalReinforcementDiameter
+        self.minimumStirrupReinforcementDiameter = minimumStirrupReinforcementDiameter
+        self.minimumDistanceBetweenStirrups = minimumDistanceBetweenStirrups
         if reinforcementSteelType == "S220":
             self.fyd=191
         elif reinforcementSteelType == "S420":
             self.fyd=365
         elif reinforcementSteelType == "S500":
             self.fyd=435
+
+
+    #Longitudinal reinforcement diameters
+        if minimumLongitudinalReinforcementDiameter == "ø8":
+            longitudinalReinforcementDiameter = 0.8
+        elif minimumLongitudinalReinforcementDiameter == "ø10":
+            longitudinalReinforcementDiameter = 1
+        elif minimumLongitudinalReinforcementDiameter == "ø12":
+            longitudinalReinforcementDiameter = 1.2
+        elif minimumLongitudinalReinforcementDiameter == "ø14":
+            longitudinalReinforcementDiameter = 1.4
+        elif minimumLongitudinalReinforcementDiameter == "ø16":
+            longitudinalReinforcementDiameter = 1.6
+
+    #Stirrup reinforcement diameters
+        if minimumStirrupReinforcementDiameter == "ø8":
+            stirrupDiameter = 0.8
+        elif minimumStirrupReinforcementDiameter == "ø10":
+            stirrupDiameter = 1
+        elif minimumStirrupReinforcementDiameter == "ø12":
+            stirrupDiameter = 1.2
+        elif minimumStirrupReinforcementDiameter == "ø14":
+            stirrupDiameter = 1.4
+        elif minimumStirrupReinforcementDiameter == "ø16":
+            stirrupDiameter = 1.6
 
 class Hatil:
     thickness=0

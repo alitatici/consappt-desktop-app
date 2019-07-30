@@ -67,7 +67,7 @@ class GeneralCalculator:
 verticalHatil = VerticalHatil(20, 4, 5)
 HorizontalHatil = HorizontalHatil(20, 2.2)
 concrete = Concrete("C25")
-steel = ReinforcementSteel("S420")
+steel = ReinforcementSteel("S420", "ø10", "ø8", 10)
 wall = Wall(20, 0.8, 8)
 plaster = Plaster(2, 1.8)
 earthquake = Earthquake(0.4, 1)
