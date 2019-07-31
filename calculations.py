@@ -248,7 +248,7 @@ concreteCover = ConcreteCover(3)
 heightParameter = HeightParameter(-5, 10)
 
 
-calculator = GeneralCalculator()
-calculator.calculateNonHorizontal(verticalHatil, concrete, steel, wall, plaster,
- earthquake, reinforcedConcreteDensity, concreteCover)
+# calculator = GeneralCalculator()
+# calculator.calculateNonHorizontal(verticalHatil, concrete, steel, wall, plaster,
+#  earthquake, reinforcedConcreteDensity, concreteCover)
 

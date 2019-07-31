@@ -2,11 +2,9 @@ from tkinter import *
 from tkinter import ttk
 from ui_components.canvas import CanvasWall
 from beam import *
+from ttkthemes import themed_tk as tk
 from calculations import *
 import math
-
-
-
 
 class Window:
 
@@ -15,8 +13,32 @@ class Window:
         button = Button(filewin, text="Do nothing button")
         button.pack()
 
+    def controlH1EntryState(self):
+        if self.hh1Active.get() == 1:
+            self.hh1Thickness.config(state="enabled")
+            self.hh1Location.config(state="enabled")
+            self.hh1Length.config(state="enabled")
+            self.hh2State.configure(state="normal")
+        else:
+            self.hh1Thickness.config(state="disabled")
+            self.hh1Location.config(state="disabled")
+            self.hh1Length.config(state="disabled")
+            self.hh2State.configure(state="disabled")
+
+    def controlH2EntryState(self):
+        if self.hh2Active.get() == 1:
+            self.hh2Thickness.config(state="enabled")
+            self.hh2Location.config(state="enabled")
+            self.hh2Length.config(state="enabled")
+        else:
+            self.hh2Thickness.config(state="disabled")
+            self.hh2Location.config(state="disabled")
+            self.hh2Length.config(state="disabled")
+
+
     def func(self, evt):
         self.designFrame.set_verticalHatilPos(float(self.vhLocation.get()))
+        self.designFrame.set_verticalHatilThickness(float(self.vhThickness.get()))
         self.designFrame.set_wallHeight(float(self.vhLength.get()))
         self.designFrame.set_wallWidth(float(self.wallWidth.get()))
 
@@ -42,49 +64,32 @@ class Window:
 
 
     def __init__(self):
-            self.root = Tk()
+            self.root = tk.ThemedTk()
+            self.root.get_themes()
+            self.root.set_theme("equilux")
+            self.root.configure(bg="#383838")
+            self.root.iconbitmap('consappt.ico')
 
-            self.menubar = Menu(self.root)
-            self.filemenu = Menu(self.menubar, tearoff=0)
-            self.filemenu.add_command(label="New", command=self.donothing)
-            self.filemenu.add_command(label="Open", command=self.donothing)
-            self.filemenu.add_command(label="Save", command=self.donothing)
-            self.filemenu.add_command(label="Save as...", command=self.donothing)
-            self.filemenu.add_command(label="Close", command=self.donothing)
+            self.toolbar = ttk.Frame(self.root, borderwidth=1, relief=RAISED)
 
-            self.filemenu.add_separator()
+            self.exitButton = ttk.Button(self.toolbar, text="Exit",
+            command=self.root.quit)
+            self.exitButton.pack(side=LEFT, padx=2, pady=2)
 
-            self.filemenu.add_command(label="Exit", command=self.root.quit)
-            self.menubar.add_cascade(label="File", menu=self.filemenu)
-            self.editmenu = Menu(self.menubar, tearoff=0)
-            self.editmenu.add_command(label="Undo", command=self.donothing)
-
-            self.editmenu.add_separator()
-
-            self.editmenu.add_command(label="Cut", command=self.donothing)
-            self.editmenu.add_command(label="Copy", command=self.donothing)
-            self.editmenu.add_command(label="Paste", command=self.donothing)
-            self.editmenu.add_command(label="Delete", command=self.donothing)
-            self.editmenu.add_command(label="Select All", command=self.donothing)
-
-            self.menubar.add_cascade(label="Edit", menu=self.editmenu)
-            self.helpmenu = Menu(self.menubar, tearoff=0)
-            self.helpmenu.add_command(label="Help Index", command=self.donothing)
-            self.helpmenu.add_command(label="About...", command=self.donothing)
-            self.menubar.add_cascade(label="Help", menu=self.helpmenu)
+            self.toolbar.grid(row=0, column=0)
 
             self.designFrame = CanvasWall()
 
 
             # SETTINGS ENTRY
 
-            self.settingsEntry = LabelFrame(self.root, text="Settings")
-            self.settingsEntry.grid(row =0, column = 3, sticky=W)
+            self.settingsEntry = ttk.Frame(self.root)
+            self.settingsEntry.grid(row =0, column = 1, sticky=E)
 
-            Label(self.settingsEntry, text="Zoom").grid(row =1, column = 0, columnspan=2, sticky=W)
+            ttk.Label(self.settingsEntry, text=" Zoom:").grid(row =1, column = 0, columnspan=2, sticky=(W,E))
 
             self.var = DoubleVar()
-            self.settingsZoom = Scale(self.settingsEntry, variable = self.var, orient=HORIZONTAL, length=200, from_=1.0, to=100.0)
+            self.settingsZoom = ttk.Scale(self.settingsEntry, variable = self.var, orient=HORIZONTAL, length=200, from_=1.0, to=100.0)
             self.root.bind("<ButtonRelease-1>", self.zoom)
  
 
@@ -93,18 +98,18 @@ class Window:
 
             # WALL ENTRY
 
-            self.wallEntry = LabelFrame(self.root, text="Wall")
-            self.wallEntry.grid(row =1, column = 3, sticky=W)
+            self.wallEntry = ttk.LabelFrame(self.root, text="Wall")
+            self.wallEntry.grid(row =1, column = 0, sticky=(W,E))
 
-            Label(self.wallEntry, text="Thickness").grid(row =1, column = 0, columnspan=2, sticky=W)
-            Label(self.wallEntry, text="Density").grid(row =1, column = 4, columnspan=2, sticky=W)
-            Label(self.wallEntry, text="Width").grid(row =1, column = 8, columnspan=2, sticky=W)
+            ttk.Label(self.wallEntry, text=" Thickness:").grid(row =1, column = 0, columnspan=2, sticky=(W,E))
+            ttk.Label(self.wallEntry, text=" Density:").grid(row =1, column = 4, columnspan=2, sticky=(W,E))
+            ttk.Label(self.wallEntry, text=" Width:").grid(row =1, column = 8, columnspan=2, sticky=(W,E))
 
-            self.wallThickness = Entry(self.wallEntry)
+            self.wallThickness = ttk.Entry(self.wallEntry)
             self.wallThickness.insert(END, "22.5")
-            self.wallDensity = Entry(self.wallEntry)
+            self.wallDensity = ttk.Entry(self.wallEntry)
             self.wallDensity.insert(END, "0.5")
-            self.wallWidth = Entry(self.wallEntry)
+            self.wallWidth = ttk.Entry(self.wallEntry)
             self.wallWidth.insert(END, "8.2")
 
             self.wallThickness.grid(row=1, column=2, columnspan=2)
@@ -113,30 +118,78 @@ class Window:
 
             # VERTICAL HATIL ENTRY
 
-            self.verticalHatilEntry = LabelFrame(self.root, text="Vertical Hatıl")
-            self.verticalHatilEntry.grid(row =2, column = 3, sticky=W)
+            self.verticalHatilEntry = ttk.LabelFrame(self.root, text="Vertical Hatıl")
+            self.verticalHatilEntry.grid(row =2, column = 0, sticky=(W,E))
 
-            Label(self.verticalHatilEntry, text="Thickness").grid(row =1, column = 0, columnspan=2,  sticky=W)
-            Label(self.verticalHatilEntry, text="Location").grid(row =1, column = 4, columnspan=2, sticky=W)
-            Label(self.verticalHatilEntry, text="Length").grid(row =1, column = 8, columnspan=2, sticky=W)
+            ttk.Label(self.verticalHatilEntry, text=" Thickness:").grid(row =1, column = 0, columnspan=2,  sticky=(W,E))
+            ttk.Label(self.verticalHatilEntry, text=" Location:").grid(row =1, column = 4, columnspan=2, sticky=(W,E))
+            ttk.Label(self.verticalHatilEntry, text=" Length:").grid(row =1, column = 8, columnspan=2, sticky=(W,E))
 
-            self.vhThickness = Entry(self.verticalHatilEntry)
+            self.vhThickness = ttk.Entry(self.verticalHatilEntry)
             self.vhThickness.insert(END, "20")
-            self.vhLocation = Entry(self.verticalHatilEntry)
+            self.vhLocation = ttk.Entry(self.verticalHatilEntry)
             self.vhLocation.insert(END, "4.1")
-            self.vhLength = Entry(self.verticalHatilEntry)
+            self.vhLength = ttk.Entry(self.verticalHatilEntry)
             self.vhLength.insert(END, "4")
 
             self.vhThickness.grid(row=1, column=2, columnspan=2)
             self.vhLocation.grid(row=1, column=6, columnspan=2)
             self.vhLength.grid(row=1, column=10, columnspan=2)
 
+            # HORIZONTAL HATIL 1 ENTRY
+
+            self.horizontalHatil1Entry = ttk.LabelFrame(self.root, text="Horizontal Hatıl I")
+            self.horizontalHatil1Entry.grid(row =3, column = 0, sticky=(W,E))
+
+            ttk.Label(self.horizontalHatil1Entry, text=" Thickness:").grid(row =1, column = 1, columnspan=2,  sticky=(W,E))
+            ttk.Label(self.horizontalHatil1Entry, text=" Location:").grid(row =1, column = 5, columnspan=2, sticky=(W,E))
+            ttk.Label(self.horizontalHatil1Entry, text=" Length:").grid(row =1, column = 9, columnspan=2, sticky=(W,E))
+
+            self.hh1Thickness = ttk.Entry(self.horizontalHatil1Entry, state="disabled")
+            self.hh1Thickness.insert(END, "20")
+            self.hh1Location = ttk.Entry(self.horizontalHatil1Entry, state="disabled")
+            self.hh1Location.insert(END, "4.1")
+            self.hh1Length = ttk.Entry(self.horizontalHatil1Entry, state="disabled")
+            self.hh1Length.insert(END, "4")
+            self.hh1Active = IntVar()
+            self.hh1State= ttk.Checkbutton(self.horizontalHatil1Entry, text="Add",
+             variable=self.hh1Active, command=self.controlH1EntryState).grid(row=1, column = 0, sticky=W)
+
+            self.hh1Thickness.grid(row=1, column=3, columnspan=2)
+            self.hh1Location.grid(row=1, column=7, columnspan=2)
+            self.hh1Length.grid(row=1, column=11, columnspan=2)
+
+            # HORIZONTAL HATIL 2 ENTRY
+
+            self.horizontalHatil2Entry = ttk.LabelFrame(self.root, text="Horizontal Hatıl II")
+            self.horizontalHatil2Entry.grid(row =4, column = 0, sticky=(W,E))
+
+            ttk.Label(self.horizontalHatil2Entry, text=" Thickness:").grid(row =1, column = 1, columnspan=2,  sticky=(W,E))
+            ttk.Label(self.horizontalHatil2Entry, text=" Location:").grid(row =1, column = 5, columnspan=2, sticky=(W,E))
+            ttk.Label(self.horizontalHatil2Entry, text=" Length:").grid(row =1, column = 9, columnspan=2, sticky=(W,E))
+
+            self.hh2Thickness = ttk.Entry(self.horizontalHatil2Entry, state="disabled")
+            self.hh2Thickness.insert(END, "20")
+            self.hh2Location = ttk.Entry(self.horizontalHatil2Entry, state="disabled")
+            self.hh2Location.insert(END, "4.1")
+            self.hh2Length = ttk.Entry(self.horizontalHatil2Entry, state="disabled")
+            self.hh2Length.insert(END, "4")
+            self.hh2Active = IntVar()
+            self.hh2State = ttk.Checkbutton(self.horizontalHatil2Entry, text="Add", variable=self.hh2Active,
+             command=self.controlH2EntryState, state="disabled")
+
+            self.hh2State.grid(row=1, column = 0, sticky=W)
+            self.hh2Thickness.grid(row=1, column=3, columnspan=2)
+            self.hh2Location.grid(row=1, column=7, columnspan=2)
+            self.hh2Length.grid(row=1, column=11, columnspan=2)
+
             # CONCRETE ENTRY
 
-            self.concreteEntry = LabelFrame(self.root, text="Concrete")
-            self.concreteEntry.grid(row =3, column = 3, sticky=W)
+            self.concreteEntry = ttk.LabelFrame(self.root, text="Concrete")
+            self.concreteEntry.grid(row =5, column = 0, sticky=(W,E))
 
             OPTIONS_FOR_CONCRETE = [
+                "C20",
                 "C20",
                 "C25",
                 "C30",
@@ -148,19 +201,20 @@ class Window:
 
             self.concreteVariable = StringVar(self.root)
             self.concreteVariable.set(OPTIONS_FOR_CONCRETE[0])
-            Label(self.concreteEntry, text="Type").grid(row =1, column = 0, columnspan=2,  sticky=W)
+            ttk.Label(self.concreteEntry, text=" Type:").grid(row =1, column = 0, columnspan=2,  sticky=(W,E))
 
-            self.concreteMenu = OptionMenu(self.concreteEntry, self.concreteVariable, *OPTIONS_FOR_CONCRETE)
+            self.concreteMenu = ttk.OptionMenu(self.concreteEntry, self.concreteVariable, *OPTIONS_FOR_CONCRETE)
 
             self.concreteMenu.grid(row=1, column=2, columnspan=2)
 
 
             # STEEL ENTRY
 
-            self.steelEntry = LabelFrame(self.root, text="Steel")
-            self.steelEntry.grid(row =4, column = 3, sticky=W)
+            self.steelEntry = ttk.LabelFrame(self.root, text="Steel")
+            self.steelEntry.grid(row =6, column = 0, sticky=(W,E))
 
             OPTIONS_FOR_STEEL = [
+                "S220",
                 "S220",
                 "S420",
                 "S500"
@@ -168,23 +222,23 @@ class Window:
 
             self.steelVariable = StringVar(self.root)
             self.steelVariable.set(OPTIONS_FOR_STEEL[0])
-            Label(self.steelEntry, text="Type").grid(row =1, column = 0, columnspan=2,  sticky=W)
+            ttk.Label(self.steelEntry, text=" Type:").grid(row =1, column = 0, columnspan=2,  sticky=(W,E))
 
-            self.steelMenu = OptionMenu(self.steelEntry, self.steelVariable, *OPTIONS_FOR_STEEL)
+            self.steelMenu = ttk.OptionMenu(self.steelEntry, self.steelVariable, *OPTIONS_FOR_STEEL)
 
             self.steelMenu.grid(row=1, column=2, columnspan=2)
 
             # PLASTER ENTRY
 
-            self.plasterEntry = LabelFrame(self.root, text="Plaster")
-            self.plasterEntry.grid(row =5, column = 3, sticky=W)
+            self.plasterEntry = ttk.LabelFrame(self.root, text="Plaster")
+            self.plasterEntry.grid(row =7, column = 0, sticky=(W,E))
 
-            Label(self.plasterEntry, text="Thickness").grid(row =1, column = 0, columnspan=2,  sticky=W)
-            Label(self.plasterEntry, text="Density").grid(row =1, column = 4, columnspan=2, sticky=W)
+            ttk.Label(self.plasterEntry, text=" Thickness:").grid(row =1, column = 0, columnspan=2,  sticky=W)
+            ttk.Label(self.plasterEntry, text=" Density:").grid(row =1, column = 4, columnspan=2, sticky=W)
 
-            self.pThickness = Entry(self.plasterEntry)
+            self.pThickness = ttk.Entry(self.plasterEntry)
             self.pThickness.insert(END, "2")
-            self.pDensity = Entry(self.plasterEntry)
+            self.pDensity = ttk.Entry(self.plasterEntry)
             self.pDensity.insert(END, "1.8")
 
             self.pThickness.grid(row=1, column=2, columnspan=2)
@@ -193,15 +247,15 @@ class Window:
 
             # EARTHQUAKE ENTRY
 
-            self.earthquakeEntry = LabelFrame(self.root, text="Earthquake")
-            self.earthquakeEntry.grid(row =6, column = 3, sticky=W)
+            self.earthquakeEntry = ttk.LabelFrame(self.root, text="Earthquake")
+            self.earthquakeEntry.grid(row =8, column =0, sticky=(W,E))
 
-            Label(self.earthquakeEntry, text="A0").grid(row =1, column = 0, columnspan=2,  sticky=W)
-            Label(self.earthquakeEntry, text="I").grid(row =1, column = 4, columnspan=2, sticky=W)
+            ttk.Label(self.earthquakeEntry, text=" A0:").grid(row =1, column = 0, columnspan=2,  sticky=W)
+            ttk.Label(self.earthquakeEntry, text=" I:").grid(row =1, column = 4, columnspan=2, sticky=W)
 
-            self.eA0 = Entry(self.earthquakeEntry)
+            self.eA0 = ttk.Entry(self.earthquakeEntry)
             self.eA0.insert(END, "0.4")
-            self.eI = Entry(self.earthquakeEntry)
+            self.eI = ttk.Entry(self.earthquakeEntry)
             self.eI.insert(END, "1")
 
             self.eA0.grid(row=1, column=2, columnspan=2)
@@ -209,12 +263,12 @@ class Window:
 
             # CONCRETE COVER ENTRY
 
-            self.concreteCoverEntry = LabelFrame(self.root, text="Concrete Cover")
-            self.concreteCoverEntry.grid(row =7, column = 3, sticky=W)
+            self.concreteCoverEntry = ttk.LabelFrame(self.root, text="Concrete Cover")
+            self.concreteCoverEntry.grid(row =9, column = 0, sticky=(W,E))
 
-            Label(self.concreteCoverEntry, text="Cover Thickness").grid(row =1, column = 0, columnspan=2,  sticky=W)
+            ttk.Label(self.concreteCoverEntry, text=" Cover Thickness:").grid(row =1, column = 0, columnspan=2,  sticky=W)
 
-            self.ccT = Entry(self.concreteCoverEntry)
+            self.ccT = ttk.Entry(self.concreteCoverEntry)
             self.ccT.insert(END, "3")
 
             self.ccT.grid(row=1, column=2, columnspan=2)
@@ -222,15 +276,15 @@ class Window:
 
             # HEIGHT PARAMETER ENTRY
 
-            self.heightParameterEntry = LabelFrame(self.root, text="Height Parameter")
-            self.heightParameterEntry.grid(row =8, column = 3, sticky=W)
+            self.heightParameterEntry = ttk.LabelFrame(self.root, text="Height Parameter")
+            self.heightParameterEntry.grid(row =10, column = 0, sticky=(W,E))
 
-            Label(self.heightParameterEntry, text="From Basement").grid(row =1, column = 0, columnspan=2,  sticky=W)
-            Label(self.heightParameterEntry, text="Max").grid(row =1, column = 4, columnspan=2, sticky=W)
+            ttk.Label(self.heightParameterEntry, text=" From Basement:").grid(row =1, column = 0, columnspan=2,  sticky=W)
+            ttk.Label(self.heightParameterEntry, text=" Max:").grid(row =1, column = 4, columnspan=2, sticky=W)
 
-            self.hpFromBasement = Entry(self.heightParameterEntry)
+            self.hpFromBasement = ttk.Entry(self.heightParameterEntry)
             self.hpFromBasement.insert(END, "-5")
-            self.hpMax = Entry(self.heightParameterEntry)
+            self.hpMax = ttk.Entry(self.heightParameterEntry)
             self.hpMax.insert(END, "10")
 
             self.hpFromBasement.grid(row=1, column=2, columnspan=2)
@@ -238,21 +292,20 @@ class Window:
 
             # CALCULATE - RESULT AREA
 
-            self.calculateResultFrame = LabelFrame(self.root, text="Calculation")
-            self.calculateResultFrame.grid(row =9, column = 3, sticky=W)
+            self.calculateResultFrame = ttk.LabelFrame(self.root, text="Calculation")
+            self.calculateResultFrame.grid(row = 11, column = 0, sticky=(W,E))
 
 
-            Button(self.calculateResultFrame, text="Calculate Problem", command = self.calculateProblem).grid(row =1, column = 0, columnspan=2,  sticky=W)
+            ttk.Button(self.calculateResultFrame, text="Calculate Problem", command = self.calculateProblem).grid(row =1, column = 0, columnspan=2,  sticky=W)
 
 
-            self.resultBox = Entry(self.calculateResultFrame)
+            self.resultBox = ttk.Entry(self.calculateResultFrame)
             self.resultBox.insert(END, "result...")
 
             self.resultBox.grid(row=1, column=2, columnspan=2)
             self.hpMax.grid(row=1, column=6, columnspan=2)
 
             self.root.bind("<KeyRelease>", self.func)
-            self.root.config(menu=self.menubar)
             self.root.mainloop()
 
 def main():

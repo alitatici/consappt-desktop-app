@@ -8,10 +8,9 @@ class CanvasWall(ttk.Frame):
         self.master.title('Consappt - Hatıl Calculation Program')
         self.isapp = isapp
 
-        self.canvas = Canvas(width=600, height=600, relief=SUNKEN,
-                             borderwidth=2)
-        self.canvas.configure(background="white")
-        self.canvas.grid(row=0, column =0, rowspan = 60, columnspan=2)
+        self.canvas = Canvas(width=800, height=600, relief=SUNKEN)
+        self.canvas.configure(background="#414141", highlightbackground="#383838", borderwidth=2)
+        self.canvas.grid(row=0, column =1, rowspan = 60, columnspan=2)
 
         self.drawingFactor = 2
 
@@ -122,6 +121,16 @@ class CanvasWall(ttk.Frame):
         else:
             v['wallHeight'] = height
         self._wall_setup(None)
+
+    def set_verticalHatilThickness(self, thickness):
+        vH = self.canvas.verticalHatilInfo
+        if thickness < 0.1:
+            vH['thickness'] = 0.1
+        elif thickness > 2:
+            vH['thickness'] = 2
+        else:
+            vH['thickness'] = thickness
+        self._wall_setup(None)
         
 
     def _move_wallWidth(self, evt):
@@ -230,8 +239,8 @@ class CanvasWall(ttk.Frame):
         # height of shaft (changes when 'height' box is dragged)
         start = v['x1'] - 10
         c.create_line(start, v['y'], start, v['y']-10*v['wallHeight']*df,
-                      arrow=BOTH, arrowshape=arrowShape)
-        c.create_text(v['x1']-15, v['y']-(10*v['wallHeight']*df/2), text=v['wallHeight'], anchor=E)
+                      arrow=BOTH, arrowshape=arrowShape, fill="red")
+        c.create_text(v['x1']-15, v['y']-(10*v['wallHeight']*df/2), text=v['wallHeight'], anchor=E, fill="red")
 
         c.create_line(v['x1'], v['y']+10, v['x1']+(10*v['wallWidth']*df), v['y']+10,
                       arrow=BOTH, arrowshape=arrowShape)
@@ -255,11 +264,20 @@ class CanvasWall(ttk.Frame):
                            outline='black', width=1, fill='white',
                            tags=('verticalHatil', 'box'))
 
+        # THICKNESS
+        c.create_line(v['x1']+ (vH['x']-vH['thickness']/2)*df*10, v['y']-v['wallHeight']*df*10+10, v['x1'] + (vH['x']+vH['thickness']/2)*df*10, v['y']-v['wallHeight']*df*10+10,
+                      arrow=BOTH, arrowshape=arrowShape, fill='white')
+
+        c.create_text(v['x1'] + vH['x']*df*10+5,
+                      v['y']-v['wallHeight']*df*10+25, text=vH['thickness'], anchor=E, fill='white')
+
+        # FROM LEFT
         c.create_line(v['x1'], v['y']-v['wallHeight']*df*10-10, v['x1'] + vH['x']*df*10, v['y']-v['wallHeight']*df*10-10,
                       arrow=BOTH, arrowshape=arrowShape)
         c.create_text((v['x1']+(10*vH['x']*df)/2),
                       v['y']-v['wallHeight']*df*10-25, text="{0:.3f}".format(vH['x']), anchor=E)
 
+        # FROM RIGHT
         c.create_line(v['x1'] + vH['x']*df*10, v['y']-v['wallHeight']*df*10-10, v['x1'] + v['wallWidth']*df*10, v['y']-v['wallHeight']*df*10-10,
                       arrow=BOTH, arrowshape=arrowShape)
 
