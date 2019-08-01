@@ -12,6 +12,7 @@ class GeneralCalculatorForOneHorizontal:
     reinforcedConcreteDensity = None
     concreteCover = None
     calculatedValues = None
+    report = ""
 
     def __init__(self):
         print("calculatorOneHorizontal Initialized")
@@ -33,25 +34,31 @@ class GeneralCalculatorForOneHorizontal:
         self.calculateWallLinearWeight()
         self.calculateLinearEquivalentEarthquakeLoad()
         self.calculateMomentAndShearForce()
-        self.calculateDeflection()
+        # self.calculateDeflection()
         #self.calculateNecessaryReinforcementArea()
         #self.calculateShearStirrups()
+        print(self.report)
 
     #weight per unit area of wall; plaster multiple with 2 beacuse of plaster uses both sides of wall. Result unit: t/m^2
     def calculateWallWeightPerUnitArea(self):
-        self.calculatedValues.wallWeightPerUnitArea = (wall.thickness/100) * wall.density + 2*(plaster.thickness/100) * plaster.density
-        print(self.calculatedValues.wallWeightPerUnitArea)
+        self.calculatedValues.wallWeightPerUnitArea = round((wall.thickness/100) * wall.density + 2*(plaster.thickness/100) * plaster.density, 3)
+        #print(self.calculatedValues.wallWeightPerUnitArea)
+        self.report += "Weight per unit area of wall: "+ str(self.calculatedValues.wallWeightPerUnitArea) + " t/m^2.\n"
 
     #Weight per meter of wall. Result unit: t/m.
     #This value must be lower than 0.7 t/m.
     def calculateWallWeightPerMeter(self):
         load = (wall.width - verticalHatil.thickness/100) * (verticalHatil.length - HorizontalHatil.thickness/100) * self.calculatedValues.wallWeightPerUnitArea
         load += verticalHatil.thickness/100 * wall.thickness/100 * verticalHatil.length * reinforcedConcreteDensity.reinforcedConcreteDensity
-        load += HorizontalHatil.thickness/100 * wall.thickness/100 * (wall.width - verticalHatil.thickness/100) * reinforcedConcreteDensity.reinforcedConcreteDensity
+        load += horizontalHatil.thickness/100 * wall.thickness/100 * (wall.width - verticalHatil.thickness/100) * reinforcedConcreteDensity.reinforcedConcreteDensity
+        load /= wall.width
+        load = round(load, 3)
         if load / wall.width > 0.7:
-            print("need support to bottom of wall. (>700kg/m)")
+            #print("need support to bottom of wall. (>700kg/m)")
+            self.report += "Weight per meter of wall: "+str(load) + " t/m. Need support to bottom of wall. (>700kg/m)\n"
         else:
-            print("ok. (<700 kg/m")
+            #print(load, "ok. (<700 kg/m)")
+            self.report += "Weight per meter of wall: "+str(load) + " t/m. Ok. (<700 kg/m)\n"
 
     #Calculation of We. Horizontal hatil's loads from wall and itself. Result unit: t/m
     def calculateWallLinearWeight(self):
@@ -59,15 +66,17 @@ class GeneralCalculatorForOneHorizontal:
         temp *= (wall.thickness/100)
         temp *= reinforcedConcreteDensity.reinforcedConcreteDensity
         temp += self.calculatedValues.wallWeightPerUnitArea * ((self.horizontalHatil.location - self.horizontalHatil.thickness/200) + self.verticalHatil.length - (self.horizontalHatil.location + self.horizontalHatil.thickness/200)) / 2
-        self.calculatedValues.wallLinearWeight = temp
-        print(self.calculatedValues.wallLinearWeight)
+        self.calculatedValues.wallLinearWeight = round(temp, 3)
+        #print(self.calculatedValues.wallLinearWeight)
+        self.report += "The load which comes to hatil: " + str(self.calculatedValues.wallLinearWeight) + " t/m.\n"
         
     #Equivalent earthquake load which use in the calculations internal forces. Result unit: t/m
     def calculateLinearEquivalentEarthquakeLoad(self):
-        print(earthquake.A0,earthquake.I, heightParameter.heightRatio)
+        #print(earthquake.A0,earthquake.I, heightParameter.heightRatio)
         temp = 0.5 * self.calculatedValues.wallLinearWeight * earthquake.A0 * earthquake.I * (1+2*heightParameter.heightRatio)
-        self.horizontalHatil.linearEquivalentEarthquakeLoad = temp
-        print(self.horizontalHatil.linearEquivalentEarthquakeLoad)
+        self.horizontalHatil.linearEquivalentEarthquakeLoad = round(temp, 3)
+        #print(self.horizontalHatil.linearEquivalentEarthquakeLoad)
+        self.report += "Equivalent earthquake load: " + str(self.horizontalHatil.linearEquivalentEarthquakeLoad) + " t/m.\n"
 
     #Calculations of maximum moment and shear force. Result unit: tm and t
     def calculateMomentAndShearForce(self):
@@ -86,77 +95,73 @@ class GeneralCalculatorForOneHorizontal:
         else:
             temp2 = tempo2
 
+        self.horizontalHatil.maximumMoment = round(temp, 3)
+        self.horizontalHatil.maximumShearForce = round(temp2, 3)
+        self.report += "Maximum moment of horizontal hatil: " + str(self.horizontalHatil.maximumMoment) + " kNm.\n"
+        self.report += "Maximum shear force for horizontal hatil: " + str(self.horizontalHatil.maximumShearForce) + " kN.\n"
+
         #vertical hatil's point load from horizontal hatil
         temp3 = self.horizontalHatil.linearEquivalentEarthquakeLoad * 9.81 * (wall.width) / 2
         #linear load from itself
         temp4 = (self.verticalHatil.thickness / 100) * (wall.thickness / 100) * reinforcedConcreteDensity.reinforcedConcreteDensity
         temp4 *= (0.5 * earthquake.A0 * earthquake.I * (1+2*heightParameter.heightRatio))
+        temp4 *= 9.81
 
-    #----------------------------------------
-        #simple beam calculation
-        reactionForceBottom = (temp3 * self.horizontalHatil.location + (temp4 * self.verticalHatil.length**2)/2)/self.verticalHatil.length
-        reactionForceTop = (temp3 * (self.verticalHatil.length - self.horizontalHatil.location) + (temp4 * self.verticalHatil.length**2)/2)/self.verticalHatil.length
-        
-        for distanceOfShearZero in range(0, float(self.verticalHatil.length), 0.001):
-        
-            if self.horizontalHatil.location > distanceOfShearZero and reactionForceBottom <= distanceOfShearZero * temp4:
-                self.verticalHatil.maximumMoment = reactionForceBottom * distanceOfShearZero - (temp4 * distanceOfShearZero **2 ) /2
-                break
-            else:
-                continue
-            
-            if reactionForceBottom >= self.horizontalHatil.location * temp4 and self.horizontalHatil.location * temp4 + temp3 >= reactionForceBottom:
-                self.verticalHatil.maximumMoment = reactionForceBottom * self.horizontalHatil.location - (temp4 * self.horizontalHatil.location **2 ) /2
-                break
-            else:
-                continue
-            
-            if distanceOfShearZero * temp4 + temp3 >= reactionForceBottom and distanceOfShearZero < (self.verticalHatil.length - self.horizontalHatil.location):
-                self.verticalHatil.maximumMoment = reactionForceBottom * distanceOfShearZero - (temp4 * distanceOfShearZero**2) /2 - temp3 * (distanceOfShearZero - self.horizontalHatil.location)
-                break
-            else:
-                continue
-        #simple beam calculation
-        #----------------------------------
+        self.verticalHatil.pointLoadFromHorizontalHatils = round(temp3, 3)
+        self.verticalHatil.linearEquivalentEarthquakeLoad = round(temp4, 3)
+        self.report += str(self.verticalHatil.linearEquivalentEarthquakeLoad) + "\n"
 
-        if reactionForceBottom > reactionForceTop:
-            self.verticalHatil.maximumShearForce = reactionForceBottom
+        #Maximum moment of vertical hatil.
+        temp5 = (temp3 * (self.verticalHatil.length - self.horizontalHatil.location) * self.horizontalHatil.location / self.verticalHatil.length)
+        temp5 += (temp4 * self.verticalHatil.length **2 / 8)
+        temp6_1 = temp3 * (self.verticalHatil.length - self.horizontalHatil.location) / self.verticalHatil.length
+        temp6_2 = temp3 * self.horizontalHatil.location / self.verticalHatil.length
+
+        if temp6_1 > temp6_2:
+            temp6 = temp6_1
         else:
-            self.verticalHatil.maximumShearForce = reactionForceTop
+            temp6 = temp6_2
 
-        self.horizontalHatil.maximumMoment = temp
-        self.horizontalHatil.maximumShearForce = temp2
-        self.verticalHatil.pointLoadFromHorizontalHatils = temp3
+        temp6 += temp4 * self.verticalHatil.length / 2
+
+        self.verticalHatil.maximumMoment = round(temp5, 3)
+        self.verticalHatil.maximumShearForce = round(temp6, 3)
+        self.report += "Maximum moment of vertical hatil: " + str(self.verticalHatil.maximumMoment) + " kNm.\n"
+        self.report += "Maximum shear force for vertical hatil: " + str(self.verticalHatil.maximumShearForce) + " kN.\n"
+
+        #Calculated like the point load always on the middle of the vertical hatil.
+        #Because, it is most unfavorable position for structure.
+
         print(self.horizontalHatil.maximumMoment)
         print(self.horizontalHatil.maximumShearForce)
-        print(verticalHatil.pointLoadFromHorizontalHatils)
+        print(self.verticalHatil.pointLoadFromHorizontalHatils)
         print(self.verticalHatil.maximumMoment)
         print(self.verticalHatil.maximumShearForce)
 
-    #Deflection of horizontal hatil. Result unit: mm
-    def calculateDeflection(self):
-        temp = (5 * self.horizontalHatil.linearEquivalentEarthquakeLoad * 9.81 * pow((self.verticalHatil.location * 1000),4) * 12)
-        temp /= (384 * self.concrete.concreteElasticityModulus * self.horizontalHatil.thickness * 10 * pow((wall.thickness * 10),3))
+    # #Deflection of horizontal hatil. Result unit: mm
+    # def calculateDeflection(self):
+    #     temp = (5 * self.horizontalHatil.linearEquivalentEarthquakeLoad * 9.81 * pow((self.verticalHatil.location * 1000),4) * 12)
+    #     temp /= (384 * self.concrete.concreteElasticityModulus * self.horizontalHatil.thickness * 10 * pow((wall.thickness * 10),3))
 
-        temp2 = (5 * self.horizontalHatil.linearEquivalentEarthquakeLoad * 9.81 * pow((wall.width - self.verticalHatil.location * 1000),4) * 12)
-        temp2 /= (384 * self.concrete.concreteElasticityModulus * self.horizontalHatil.thickness * 10 * pow((wall.thickness * 10),3))
+    #     temp2 = (5 * self.horizontalHatil.linearEquivalentEarthquakeLoad * 9.81 * pow((wall.width - self.verticalHatil.location * 1000),4) * 12)
+    #     temp2 /= (384 * self.concrete.concreteElasticityModulus * self.horizontalHatil.thickness * 10 * pow((wall.thickness * 10),3))
 
-        if temp > temp2:
-            self.horizontalHatil.deflection = temp
-            print(self.horizontalHatil.deflection)
+    #     if temp > temp2:
+    #         self.horizontalHatil.deflection = temp
+    #         print(self.horizontalHatil.deflection)
 
-            if self.horizontalHatil.deflection > self.verticalHatil.location * 1000 / 300:
-                print("Deflection is too much, hatil's sizes must be extend!")
-            else:
-                print("Within the deflection limit.")
-        else:
-            self.horizontalHatil.deflection = temp2
-            print(self.horizontalHatil.deflection)
+    #         if self.horizontalHatil.deflection > self.verticalHatil.location * 1000 / 300:
+    #             print("Deflection is too much, hatil's sizes must be extend!")
+    #         else:
+    #             print("Within the deflection limit.")
+    #     else:
+    #         self.horizontalHatil.deflection = temp2
+    #         print(self.horizontalHatil.deflection)
 
-            if self.horizontalHatil.deflection > (wall.width - self.verticalHatil.location) * 1000 / 300:
-                print("Deflection is too much, hatil's sizes must be extend!")
-            else:
-                print("Within the deflection limit.")
+    #         if self.horizontalHatil.deflection > (wall.width - self.verticalHatil.location) * 1000 / 300:
+    #             print("Deflection is too much, hatil's sizes must be extend!")
+    #         else:
+    #             print("Within the deflection limit.")
 
     #Deflection of vertical hatil. Result unit: mm
     #This calculation is not accurrate for every location of horizontal hatil.
@@ -165,7 +170,7 @@ class GeneralCalculatorForOneHorizontal:
 
 
 verticalHatil = VerticalHatil(20, 4, 5)
-horizontalHatil = HorizontalHatil(20, 2.2)
+horizontalHatil = HorizontalHatil(20, 2.5)
 concrete = Concrete("C25")
 steel = ReinforcementSteel("S420", "ø10", "ø8", 10)
 wall = Wall(20, 0.8, 8)
