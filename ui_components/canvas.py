@@ -15,7 +15,9 @@ class CanvasWall(ttk.Frame):
         self.drawingFactor = 2
 
         self._define_wall()    # setup wall dimensions and appearance
-        self._define_vertical_hatil()  # setup hatil dimensions and appearance
+        self._define_vertical_hatil()  # setup vertical hatil dimensions and appearance
+        self._define_horizontal_hatil_1()  # setup horizontal hatil 1 dimensions and appearance
+        self._define_horizontal_hatil_2()  # setup horizontal hatil 2 dimensions and appearance
         self._wall_setup(None)  # draw the wall and descriptions
         self._add_bindings()    # bind the reshape rectangles
 
@@ -53,6 +55,26 @@ class CanvasWall(ttk.Frame):
             'active': {'fill': 'red'}
         }
         self.canvas.verticalHatilInfo = verticalHatil
+
+    def _define_horizontal_hatil_1(self):
+        horizontalHatil = {
+            'motion': None,
+            'z': 0.8,
+            'thickness': 0.3,
+            'box': {'fill': 'white'},
+            'active': {'fill': 'red'}
+        }
+        self.canvas.horizontalHatil1Info = horizontalHatil
+
+    def _define_horizontal_hatil_2(self):
+        horizontalHatil = {
+            'motion': None,
+            'z': 1.6,
+            'thickness': 0.3,
+            'box': {'fill': 'white'},
+            'active': {'fill': 'red'}
+        }
+        self.canvas.horizontalHatil2Info = horizontalHatil
 
     # ================================================================================
     # Canvas bindings
@@ -213,7 +235,10 @@ class CanvasWall(ttk.Frame):
         c = self.canvas
         v = self.canvas.wallInfo
         vH = self.canvas.verticalHatilInfo
+        hh1 = self.canvas.horizontalHatil1Info
+        hh2 = self.canvas.horizontalHatil2Info
         df = self.drawingFactor
+        
 
         tags = c.gettags('current')  # save existing tags, if any
         c.delete(ALL)      # remove all objects
@@ -263,6 +288,14 @@ class CanvasWall(ttk.Frame):
                            v['x1'] + vH['x']*df*10 + 5, v['y']-v['wallHeight']*df*5+5,
                            outline='black', width=1, fill='white',
                            tags=('verticalHatil', 'box'))
+
+        # HORIZONTAL HATIL 1 SECTION
+        c.create_line(v['x1'], v['y']-10*df*hh1['z'], v['x1'] + v['wallWidth']*10*df, v['y']-10*df*hh1['z'],
+                      fill='#333', width=10*df*hh1['thickness'])
+
+        # HORIZONTAL HATIL 2 SECTION
+        c.create_line(v['x1'], v['y']-10*df*hh2['z'], v['x1'] + v['wallWidth']*10*df, v['y']-10*df*hh2['z'],
+                      fill='#333', width=10*df*hh1['thickness'])
 
         # THICKNESS
         c.create_line(v['x1']+ (vH['x']-vH['thickness']/2)*df*10, v['y']-v['wallHeight']*df*10+10, v['x1'] + (vH['x']+vH['thickness']/2)*df*10, v['y']-v['wallHeight']*df*10+10,

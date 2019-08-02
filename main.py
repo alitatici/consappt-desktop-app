@@ -49,7 +49,7 @@ class Window:
         self.wall = Wall(float(self.wallThickness.get()), float(self.wallDensity.get()), float(self.wallWidth.get()))
         self.verticalHatil = VerticalHatil(float(self.vhThickness.get()), float(self.vhLocation.get()), float(self.vhLength.get()))
         self.concrete = Concrete(self.concreteVariable.get())
-        self.steel = ReinforcementSteel(self.steelVariable.get())
+        self.steel = ReinforcementSteel(self.steelVariable.get(), self.longitudinalVariable.get(), self.stirrupVariable.get(), int(self.distanceVariable.get()))
         self.plaster = Plaster(float(self.pThickness.get()), float(self.pDensity.get()))
         self.earthquake = Earthquake(float(self.eA0.get()), float(self.eI.get()))
         self.reinforcedConcreteDensity = ReinforcedConcreteDensity()
@@ -220,13 +220,66 @@ class Window:
                 "S500"
                 ]
 
+            OPTIONS_FOR_LONGITUDINAL = [
+                "ø8",
+                "ø8",
+                "ø10",
+                "ø12",
+                "ø14",
+                "ø16"
+                ]
+
+            OPTIONS_FOR_STIRRUP = [
+                "ø8",
+                "ø8",
+                "ø10",
+                "ø12",
+                "ø14",
+                "ø16"
+                ]
+
+            OPTIONS_FOR_DISTANCE = [
+                "8",
+                "8",
+                "10",
+                "12",
+                "14",
+                "16",
+                "18",
+                "20",
+                "22",
+                "24",
+                ]
+
             self.steelVariable = StringVar(self.root)
             self.steelVariable.set(OPTIONS_FOR_STEEL[0])
-            ttk.Label(self.steelEntry, text=" Type:").grid(row =1, column = 0, columnspan=2,  sticky=(W,E))
+            ttk.Label(self.steelEntry, text=" Type:").grid(row =1, column = 0,  sticky=(W,E))
 
             self.steelMenu = ttk.OptionMenu(self.steelEntry, self.steelVariable, *OPTIONS_FOR_STEEL)
 
-            self.steelMenu.grid(row=1, column=2, columnspan=2)
+            self.longitudinalVariable = StringVar(self.root)
+            self.longitudinalVariable.set(OPTIONS_FOR_LONGITUDINAL[0])
+            ttk.Label(self.steelEntry, text=" Longitudinal:").grid(row =1, column = 2,  sticky=(W,E))
+
+            self.longitudinalMenu = ttk.OptionMenu(self.steelEntry, self.longitudinalVariable, *OPTIONS_FOR_LONGITUDINAL)
+
+
+            self.stirrupVariable = StringVar(self.root)
+            self.stirrupVariable.set(OPTIONS_FOR_STIRRUP[0])
+            ttk.Label(self.steelEntry, text=" Stirrup:").grid(row =1, column = 4,  sticky=(W,E))
+
+            self.stirrupMenu = ttk.OptionMenu(self.steelEntry, self.stirrupVariable, *OPTIONS_FOR_STIRRUP)
+
+            self.distanceVariable = StringVar(self.root)
+            self.distanceVariable.set(OPTIONS_FOR_DISTANCE[0])
+            ttk.Label(self.steelEntry, text=" Distance:").grid(row =1, column = 6,  sticky=(W,E))
+
+            self.distanceMenu = ttk.OptionMenu(self.steelEntry, self.distanceVariable, *OPTIONS_FOR_DISTANCE)
+
+            self.steelMenu.grid(row=1, column=1)
+            self.longitudinalMenu.grid(row=1, column=3)
+            self.stirrupMenu.grid(row = 1, column=5)
+            self.distanceMenu.grid(row = 1, column=7)
 
             # PLASTER ENTRY
 
