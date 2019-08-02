@@ -56,7 +56,7 @@ class GeneralCalculatorForOneHorizontal:
         load += horizontalHatil.thickness/100 * wall.thickness/100 * (wall.width - verticalHatil.thickness/100) * reinforcedConcreteDensity.reinforcedConcreteDensity
         load /= wall.width
         load = round(load, 3)
-        if load / wall.width > 0.7:
+        if (load / wall.width) > 0.7:
             #print("need support to bottom of wall. (>700kg/m)")
             self.report += "Weight per meter of wall: "+str(load) + " t/m. Need support to bottom of wall. (>700kg/m)\n"
         else:
@@ -460,7 +460,7 @@ verticalHatil = VerticalHatil(20, 4, 5)
 horizontalHatil = HorizontalHatil(20, 2.5)
 concrete = Concrete("C25")
 steel = ReinforcementSteel("S420", "ø10", "ø8", 20)
-wall = Wall(20, 0.8, 8)
+wall = Wall(20, 0.5, 8)
 plaster = Plaster(2, 1.8)
 earthquake = Earthquake(0.4, 1)
 reinforcedConcreteDensity = ReinforcedConcreteDensity()
