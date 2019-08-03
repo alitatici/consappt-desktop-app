@@ -238,18 +238,18 @@ class GeneralCalculator:
 
 
 
-verticalHatil = VerticalHatil(20, 4.1, 3)
-concrete = Concrete("C25")
-steel = ReinforcementSteel("S420", "ø12", "ø8", 20)
-wall = Wall(15, 0.5, 8.2)
-plaster = Plaster(2, 1.8)
-earthquake = Earthquake(0.4, 1)
-reinforcedConcreteDensity = ReinforcedConcreteDensity()
-concreteCover = ConcreteCover(3)
-heightParameter = HeightParameter(-5, 10)
+# verticalHatil = VerticalHatil(20, 4.1, 3)
+# concrete = Concrete("C25")
+# steel = ReinforcementSteel("S420", "ø12", "ø8", 20)
+# wall = Wall(15, 0.5, 8.2)
+# plaster = Plaster(2, 1.8)
+# earthquake = Earthquake(0.4, 1)
+# reinforcedConcreteDensity = ReinforcedConcreteDensity()
+# concreteCover = ConcreteCover(3)
+# heightParameter = HeightParameter(-5, 10)
 
 
-calculator = GeneralCalculator()
-calculator.calculateNonHorizontal(verticalHatil, concrete, steel, wall, plaster,
- earthquake, reinforcedConcreteDensity, concreteCover, heightParameter)
+# calculator = GeneralCalculator()
+# calculator.calculateNonHorizontal(verticalHatil, concrete, steel, wall, plaster,
+#  earthquake, reinforcedConcreteDensity, concreteCover, heightParameter)
 

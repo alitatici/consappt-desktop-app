@@ -226,6 +226,22 @@ class CanvasWall(ttk.Frame):
             vH['x'] = pos
         self._wall_setup(None)
 
+    def set_hh1Pos(self, pos):
+        hh1 = self.canvas.horizontalHatil1Info
+        hh1['z'] = pos
+
+    def set_hh2Pos(self, pos):
+        hh2 = self.canvas.horizontalHatil2Info
+        hh2['z'] = pos
+
+    def set_hh1Thickness(self, thickness):
+        hh1 = self.canvas.horizontalHatil1Info
+        hh1['thickness'] = thickness
+
+    def set_hh2Thickness(self, thickness):
+        hh2 = self.canvas.horizontalHatil2Info
+        hh2['thickness'] = thickness
+
     def set_zoom(self, zoomFactor):
         self.drawingFactor = zoomFactor
         self._wall_setup(None)

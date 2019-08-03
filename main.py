@@ -4,6 +4,7 @@ from ui_components.canvas import CanvasWall
 from beam import *
 from ttkthemes import themed_tk as tk
 from calculations import *
+from calculationOfOneHorizontal import *
 import math
 
 class Window:
@@ -17,13 +18,11 @@ class Window:
         if self.hh1Active.get() == 1:
             self.hh1Thickness.config(state="enabled")
             self.hh1Location.config(state="enabled")
-            self.hh1Length.config(state="enabled")
             self.hh2State.configure(state="normal")
             self.designFrame.setH1Active()
         else:
             self.hh1Thickness.config(state="disabled")
             self.hh1Location.config(state="disabled")
-            self.hh1Length.config(state="disabled")
             self.hh2State.configure(state="disabled")
             self.designFrame.setH1Passive()
             self.designFrame.setH2Passive()
@@ -32,18 +31,22 @@ class Window:
         if self.hh2Active.get() == 1:
             self.hh2Thickness.config(state="enabled")
             self.hh2Location.config(state="enabled")
-            self.hh2Length.config(state="enabled")
             self.designFrame.setH2Active()
         else:
             self.hh2Thickness.config(state="disabled")
             self.hh2Location.config(state="disabled")
-            self.hh2Length.config(state="disabled")
             self.designFrame.setH2Passive()
 
 
     def func(self, evt):
         self.designFrame.set_verticalHatilPos(float(self.vhLocation.get()))
-        self.designFrame.set_verticalHatilThickness(float(self.vhThickness.get()))
+        self.designFrame.set_verticalHatilThickness(float(self.vhThickness.get())/100)
+        if self.hh1Active.get() == 1:
+            self.designFrame.set_hh1Pos(float(self.hh1Location.get()))
+            self.designFrame.set_hh1Thickness(float(self.hh1Thickness.get())/100)
+        if self.hh2Active.get() == 1:
+            self.designFrame.set_hh2Pos(float(self.hh2Location.get()))
+            self.designFrame.set_hh2Thickness(float(self.hh2Thickness.get())/100)            
         self.designFrame.set_wallHeight(float(self.vhLength.get()))
         self.designFrame.set_wallWidth(float(self.wallWidth.get()))
 
@@ -60,9 +63,16 @@ class Window:
         self.reinforcedConcreteDensity = ReinforcedConcreteDensity()
         self.concreteCover = ConcreteCover(float(self.ccT.get()))
         self.heightParameter = HeightParameter(float(self.hpFromBasement.get()), float(self.hpMax.get()))
-        calculator = GeneralCalculator()
-        string = calculator.calculateNonHorizontal(self.verticalHatil, self.concrete, self.steel, self.wall, self.plaster,
-        self.earthquake, self.reinforcedConcreteDensity, self.concreteCover, self.heightParameter)
+        if self.hh2Active.get() == 1:
+            pass
+        elif self.hh1Active.get() == 1:
+            calculator = GeneralCalculatorForOneHorizontal()
+            string = calculator.calculateOneHorizontal(self.verticalHatil, self.concrete, self.steel, self.wall, self.plaster,
+            self.earthquake, self.reinforcedConcreteDensity, self.concreteCover, self.heightParameter)
+        else:
+            calculator = GeneralCalculator()
+            string = calculator.calculateNonHorizontal(self.verticalHatil, self.concrete, self.steel, self.wall, self.plaster,
+            self.earthquake, self.reinforcedConcreteDensity, self.concreteCover, self.heightParameter)
         self.resultBox.delete(0, END)
         self.resultBox.insert(INSERT, string[0])
         self.T.delete("1.0", END)
@@ -151,21 +161,19 @@ class Window:
 
             ttk.Label(self.horizontalHatil1Entry, text=" Thickness:").grid(row =1, column = 1, columnspan=2,  sticky=(W,E))
             ttk.Label(self.horizontalHatil1Entry, text=" Location:").grid(row =1, column = 5, columnspan=2, sticky=(W,E))
-            ttk.Label(self.horizontalHatil1Entry, text=" Length:").grid(row =1, column = 9, columnspan=2, sticky=(W,E))
 
             self.hh1Thickness = ttk.Entry(self.horizontalHatil1Entry, state="disabled")
             self.hh1Thickness.insert(END, "20")
             self.hh1Location = ttk.Entry(self.horizontalHatil1Entry, state="disabled")
             self.hh1Location.insert(END, "4.1")
-            self.hh1Length = ttk.Entry(self.horizontalHatil1Entry, state="disabled")
-            self.hh1Length.insert(END, "4")
+
             self.hh1Active = IntVar()
             self.hh1State= ttk.Checkbutton(self.horizontalHatil1Entry, text="Add",
              variable=self.hh1Active, command=self.controlH1EntryState).grid(row=1, column = 0, sticky=W)
 
             self.hh1Thickness.grid(row=1, column=3, columnspan=2)
             self.hh1Location.grid(row=1, column=7, columnspan=2)
-            self.hh1Length.grid(row=1, column=11, columnspan=2)
+
 
             # HORIZONTAL HATIL 2 ENTRY
 
@@ -174,14 +182,13 @@ class Window:
 
             ttk.Label(self.horizontalHatil2Entry, text=" Thickness:").grid(row =1, column = 1, columnspan=2,  sticky=(W,E))
             ttk.Label(self.horizontalHatil2Entry, text=" Location:").grid(row =1, column = 5, columnspan=2, sticky=(W,E))
-            ttk.Label(self.horizontalHatil2Entry, text=" Length:").grid(row =1, column = 9, columnspan=2, sticky=(W,E))
+
 
             self.hh2Thickness = ttk.Entry(self.horizontalHatil2Entry, state="disabled")
             self.hh2Thickness.insert(END, "20")
             self.hh2Location = ttk.Entry(self.horizontalHatil2Entry, state="disabled")
             self.hh2Location.insert(END, "4.1")
-            self.hh2Length = ttk.Entry(self.horizontalHatil2Entry, state="disabled")
-            self.hh2Length.insert(END, "4")
+
             self.hh2Active = IntVar()
             self.hh2State = ttk.Checkbutton(self.horizontalHatil2Entry, text="Add", variable=self.hh2Active,
              command=self.controlH2EntryState, state="disabled")
@@ -189,7 +196,7 @@ class Window:
             self.hh2State.grid(row=1, column = 0, sticky=W)
             self.hh2Thickness.grid(row=1, column=3, columnspan=2)
             self.hh2Location.grid(row=1, column=7, columnspan=2)
-            self.hh2Length.grid(row=1, column=11, columnspan=2)
+
 
             # CONCRETE ENTRY
 
