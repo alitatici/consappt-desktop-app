@@ -59,7 +59,9 @@ class Window:
         string = calculator.calculateNonHorizontal(self.verticalHatil, self.concrete, self.steel, self.wall, self.plaster,
         self.earthquake, self.reinforcedConcreteDensity, self.concreteCover, self.heightParameter)
         self.resultBox.delete(0, END)
-        self.resultBox.insert(INSERT, string)
+        self.resultBox.insert(INSERT, string[0])
+        self.T.delete("1.0", END)
+        self.T.insert(END, string[1])
 
 
 
@@ -89,6 +91,7 @@ class Window:
             ttk.Label(self.settingsEntry, text=" Zoom:").grid(row =1, column = 0, columnspan=2, sticky=(W,E))
 
             self.var = DoubleVar()
+            self.var.set(75)
             self.settingsZoom = ttk.Scale(self.settingsEntry, variable = self.var, orient=HORIZONTAL, length=200, from_=1.0, to=100.0)
             self.root.bind("<ButtonRelease-1>", self.zoom)
  
@@ -349,14 +352,27 @@ class Window:
             self.calculateResultFrame.grid(row = 11, column = 0, sticky=(W,E))
 
 
-            ttk.Button(self.calculateResultFrame, text="Calculate Problem", command = self.calculateProblem).grid(row =1, column = 0, columnspan=2,  sticky=W)
+            ttk.Button(self.calculateResultFrame, text="Calculate Problem", command = self.calculateProblem).grid(row =0, column = 0, columnspan=2,  sticky=W)
+
+            self.resultAreaFrame =ttk.Frame(self.calculateResultFrame)
+            self.resultAreaFrame.grid(row =1, column = 0, columnspan = 10, sticky=(W,E))
+            self.S = ttk.Scrollbar(self.resultAreaFrame)
+            self.T = Text(self.resultAreaFrame, height=4, width=80)
+            self.T.tag_add("here", "1.0", "1.4")
+            self.T.tag_config("here", background="black", foreground="green")
+            self.S.pack(side=RIGHT, fill=Y)
+            self.T.pack(side=LEFT, fill=Y)
+            self.S.config(command=self.T.yview)
+            self.T.config(yscrollcommand=self.S.set)
+            self.T.configure(background="#414141", fg="white")
+            self.T.insert(END, "result...")
 
 
             self.resultBox = ttk.Entry(self.calculateResultFrame)
             self.resultBox.insert(END, "result...")
 
-            self.resultBox.grid(row=1, column=2, columnspan=2)
-            self.hpMax.grid(row=1, column=6, columnspan=2)
+            self.resultBox.grid(row=0, column=2, columnspan=2)
+            self.hpMax.grid(row=0, column=6, columnspan=2)
 
             self.root.bind("<KeyRelease>", self.func)
             self.root.mainloop()
