@@ -57,7 +57,7 @@ class Window:
         self.heightParameter = HeightParameter(float(self.hpFromBasement.get()), float(self.hpMax.get()))
         calculator = GeneralCalculator()
         string = calculator.calculateNonHorizontal(self.verticalHatil, self.concrete, self.steel, self.wall, self.plaster,
-        self.earthquake, self.reinforcedConcreteDensity, self.concreteCover)
+        self.earthquake, self.reinforcedConcreteDensity, self.concreteCover, self.heightParameter)
         self.resultBox.delete(0, END)
         self.resultBox.insert(INSERT, string)
 

@@ -2,33 +2,34 @@ from beam import *
 import math
 
 class GeneralCalculator:
-    verticalHatil = None
-    concrete = None
-    steel = None
-    wall = None
-    plaster = None
-    earthquake = None
-    reinforcedConcreteDensity = None
-    concreteCover = None
-    calculatedValues = None
-   #delete it later... #ReinforcementSteel = None
-    report = ""
-    
 
     def __init__(self):
         print("Calculator Initialized")
         self.calculatedValues = CalculatedValues()
+        self.verticalHatil = None
+        self.concrete = None
+        self.steel = None
+        self.wall = None
+        self.plaster = None
+        self.earthquake = None
+        self.reinforcedConcreteDensity = None
+        self.concreteCover = None
+        self.heightParameter = None
+        self.calculatedValues = CalculatedValues()
+    #delete it later... #ReinforcementSteel = None
+        self.report = ""
 
     def calculateNonHorizontal(self, verticalHatil, concrete, steel, wall,
-     plaster, earthquake, reinforcedConcreteDensity, concreteCover):
+     plaster, earthquake, reinforcedConcreteDensity, concreteCover, heightParameter):
         self.verticalHatil = verticalHatil
         self.concrete = concrete
         self.steel = steel
-        self.wall = wall,
-        self.plaster = plaster,
+        self.wall = wall
+        self.plaster = plaster
         self.earthquake = earthquake
         self.reinforcedConcreteDensity = reinforcedConcreteDensity
         self.concreteCover = concreteCover
+        self.heightParameter = heightParameter
 
         self.calculateWallWeightPerUnitArea()
         self.calculateWallWeightPerMeter()
@@ -43,16 +44,16 @@ class GeneralCalculator:
 
 #weight per unit area of wall; plaster multiple with 2 beacuse of plaster uses both sides of wall. Result unit: t/m^2
     def calculateWallWeightPerUnitArea(self):
-        self.calculatedValues.wallWeightPerUnitArea = round((wall.thickness/100) * wall.density + 2*(plaster.thickness/100) * plaster.density, 3)
+        self.calculatedValues.wallWeightPerUnitArea = round((self.wall.thickness/100) * self.wall.density + 2*(self.plaster.thickness/100) * self.plaster.density, 3)
         #print("Weight per unit area of wall: "+ str(self.calculatedValues.wallWeightPerUnitArea))
         self.report += "Weight per unit area of wall: "+ str(self.calculatedValues.wallWeightPerUnitArea) + " t/m^2.\n"
 
 #Weight per meter of wall. Result unit: t/m. 
 #This value must be lower than 0.7 t/m.
     def calculateWallWeightPerMeter(self):
-        load = (wall.width - verticalHatil.thickness/100) * verticalHatil.length * self.calculatedValues.wallWeightPerUnitArea
-        load += verticalHatil.thickness/100 * wall.thickness/100 * verticalHatil.length * reinforcedConcreteDensity.reinforcedConcreteDensity
-        load /= wall.width
+        load = (self.wall.width - self.verticalHatil.thickness/100) * self.verticalHatil.length * self.calculatedValues.wallWeightPerUnitArea
+        load += self.verticalHatil.thickness/100 * self.wall.thickness/100 * self.verticalHatil.length * self.reinforcedConcreteDensity.reinforcedConcreteDensity
+        load /= self.wall.width
         load = round(load, 3)
         if load > 0.7:
             #print(str(load) + " t/m. Need support to bottom of wall. (>700kg/m)")
@@ -63,17 +64,17 @@ class GeneralCalculator:
 
 #Calculation of We. Hatil's loads from wall and itself. Result unit: t/m
     def calculateWallLinearWeight(self):
-        temp = (verticalHatil.thickness/100)
-        temp *= (wall.thickness/100)
-        temp *= reinforcedConcreteDensity.reinforcedConcreteDensity
-        temp += ((wall.width - verticalHatil.thickness/100)/2) * self.calculatedValues.wallWeightPerUnitArea
+        temp = (self.verticalHatil.thickness/100)
+        temp *= (self.wall.thickness/100)
+        temp *= self.reinforcedConcreteDensity.reinforcedConcreteDensity
+        temp += ((self.wall.width - self.verticalHatil.thickness/100)/2) * self.calculatedValues.wallWeightPerUnitArea
         self.calculatedValues.wallLinearWeight = round(temp, 3)
         #print("The load which comes to hatil: " + str(self.calculatedValues.wallLinearWeight))
         self.report += "The load which comes to hatil: " + str(self.calculatedValues.wallLinearWeight) + " t/m.\n"
 
 #Equivalent earthquake load which use in the calculations internal forces. Result unit: t/m
     def calculateLinearEquivalentEarthquakeLoad(self):
-        temp = 0.5 * self.calculatedValues.wallLinearWeight * earthquake.A0 * earthquake.I * (1+2*heightParameter.heightRatio)
+        temp = 0.5 * self.calculatedValues.wallLinearWeight * self.earthquake.A0 * self.earthquake.I * (1+2*self.heightParameter.heightRatio)
         self.verticalHatil.linearEquivalentEarthquakeLoad = round(temp, 3)
         #print("Equivalent earthquake load " + str(self.verticalHatil.linearEquivalentEarthquakeLoad))
         self.report += "Equivalent earthquake load: " + str(self.verticalHatil.linearEquivalentEarthquakeLoad) + " t/m.\n"
@@ -81,7 +82,7 @@ class GeneralCalculator:
 #Deflection. Result unit: mm
     def calculateDeflection(self):
         temp = (5 * self.verticalHatil.linearEquivalentEarthquakeLoad * 9.81 * pow((self.verticalHatil.length * 1000),4) * 12)
-        temp /= (384 * self.concrete.concreteElasticityModulus * self.verticalHatil.thickness * 10 * pow((wall.thickness * 10),3))
+        temp /= (384 * self.concrete.concreteElasticityModulus * self.verticalHatil.thickness * 10 * pow((self.wall.thickness * 10),3))
         self.verticalHatil.deflection = round(temp,3)
         #print("Deflection of vertical hatil: " + str(self.verticalHatil.deflection))
 
@@ -94,8 +95,8 @@ class GeneralCalculator:
         
 #Calculations of maximum moment and shear force. Result unit: tm and t
     def calculateMomentAndShearForce(self):
-        temp = verticalHatil.linearEquivalentEarthquakeLoad * 9.81 * verticalHatil.length* verticalHatil.length / 8
-        temp2 = verticalHatil.linearEquivalentEarthquakeLoad * 9.81 * verticalHatil.length / 2
+        temp = self.verticalHatil.linearEquivalentEarthquakeLoad * 9.81 * self.verticalHatil.length* self.verticalHatil.length / 8
+        temp2 = self.verticalHatil.linearEquivalentEarthquakeLoad * 9.81 * self.verticalHatil.length / 2
         self.verticalHatil.maximumMoment = round(temp, 3)
         self.verticalHatil.maximumShearForce = round(temp2, 3)
 
@@ -105,9 +106,9 @@ class GeneralCalculator:
 
 #Calculation of necessary reinforcement area. Result unit cm^2
     def calculateNecessaryReinforcementArea(self):
-        a = 0.5 * concrete.k1 * concrete.fcd * verticalHatil.thickness * 10 
-        b = - (wall.thickness * 10 - concreteCover.coverThickness * 10) * concrete.k1 * concrete.fcd * verticalHatil.thickness * 10
-        c = verticalHatil.maximumMoment * 1000000
+        a = 0.5 * self.concrete.k1 * self.concrete.fcd * self.verticalHatil.thickness * 10 
+        b = - (self.wall.thickness * 10 - self.concreteCover.coverThickness * 10) * self.concrete.k1 * self.concrete.fcd * self.verticalHatil.thickness * 10
+        c = self.verticalHatil.maximumMoment * 1000000
         discriminant = (b*b) - (4*a*c) 
 
         root = 0
@@ -128,12 +129,12 @@ class GeneralCalculator:
             root = None
 
 
-        temp = concrete.k1 * concrete.fcd *  verticalHatil.thickness * 10 * root / (steel.fyd*100)
+        temp = self.concrete.k1 * self.concrete.fcd *  self.verticalHatil.thickness * 10 * root / (self.steel.fyd*100)
         self.verticalHatil.necessaryReinforcementArea = round(temp, 3)
         #print(self.verticalHatil.necessaryReinforcementArea)
         self.report += "Necessary reinforcement area: " + str(self.verticalHatil.necessaryReinforcementArea) + " cm^2.\n"
 
-        if steel.minimumLongitudinalReinforcementDiameter == "ø8" or steel.minimumLongitudinalReinforcementDiameter == "ø10":
+        if self.steel.minimumLongitudinalReinforcementDiameter == "ø8" or self.steel.minimumLongitudinalReinforcementDiameter == "ø10":
             if temp < 1.57:
                 self.calculatedValues.reinforcementAmount = "2ø10"
             elif temp >= 1.57 and temp < 2.26:
@@ -161,7 +162,7 @@ class GeneralCalculator:
             else:
                 self.calculatedValues.reinforcementAmount = "not found for "+str(temp)+" cm^2"
 
-        elif steel.minimumLongitudinalReinforcementDiameter == "ø12":
+        elif self.steel.minimumLongitudinalReinforcementDiameter == "ø12":
             if temp < 2.26:
 	            self.calculatedValues.reinforcementAmount = "2ø12"
             elif temp >= 2.26 and temp < 3.08:
@@ -183,7 +184,7 @@ class GeneralCalculator:
             else:
                 self.calculatedValues.reinforcementAmount = "not found for "+str(temp)+" cm^2"
 
-        elif steel.minimumLongitudinalReinforcementDiameter == "ø14":
+        elif self.steel.minimumLongitudinalReinforcementDiameter == "ø14":
             if temp < 3.08:
                 self.calculatedValues.reinforcementAmount = "2ø14"
             elif temp >= 3.08 and temp < 4.02:
@@ -199,7 +200,7 @@ class GeneralCalculator:
             else:
                 self.calculatedValues.reinforcementAmount = "not found for "+str(temp)+" cm^2"
         
-        elif steel.minimumLongitudinalReinforcementDiameter == "ø16":
+        elif self.steel.minimumLongitudinalReinforcementDiameter == "ø16":
             if temp < 4.02:
 	            self.calculatedValues.reinforcementAmount = "2ø16"
             elif temp >= 4.02 and temp < 6.03:
@@ -215,19 +216,19 @@ class GeneralCalculator:
                 
 #Calculations of stirrups.
     def calculateShearStirrups(self):
-        Vcr = 0.65 * self.concrete.fctd * self.verticalHatil.thickness * 10 * (wall.thickness * 10 - concreteCover.coverThickness * 10) / 1000 
-        Vres = 0.22 * concrete.fcd * self.verticalHatil.thickness * 10 * (wall.thickness * 10 - concreteCover.coverThickness*10) / 1000
+        Vcr = 0.65 * self.concrete.fctd * self.verticalHatil.thickness * 10 * (self.wall.thickness * 10 - self.concreteCover.coverThickness * 10) / 1000 
+        Vres = 0.22 * self.concrete.fcd * self.verticalHatil.thickness * 10 * (self.wall.thickness * 10 - self.concreteCover.coverThickness*10) / 1000
         #Vc = 0.8 * Vcr 
-        Vw = 2 * pow((steel.stirrupDiameter*10),2) * math.pi / 4
-        Vw *= (wall.thickness * 10 - concreteCover.coverThickness * 10)
-        Vw *= steel.fyd
-        Vw /= (steel.minimumDistanceBetweenStirrups * 10000)
+        Vw = 2 * pow((self.steel.stirrupDiameter*10),2) * math.pi / 4
+        Vw *= (self.wall.thickness * 10 - self.concreteCover.coverThickness * 10)
+        Vw *= self.steel.fyd
+        Vw /= (self.steel.minimumDistanceBetweenStirrups * 10000)
         #Vr = Vc + Vw
         #print(self.verticalHatil.maximumShearForce, Vcr, Vw, Vres, Vr, steel.stirrupDiameter, steel.minimumDistanceBetweenStirrups)
         if self.verticalHatil.maximumShearForce <= Vcr:
         #Minimum stirrups use.
             #print("Stirrup:"+str(steel.minimumStirrupReinforcementDiameter)+"/"+str(steel.minimumDistanceBetweenStirrups)+"cm")
-            self.report += "Stirrup:"+str(steel.minimumStirrupReinforcementDiameter)+"/"+str(steel.minimumDistanceBetweenStirrups)+" cm"+ "\n"
+            self.report += "Stirrup:"+str(self.steel.minimumStirrupReinforcementDiameter)+"/"+str(self.steel.minimumDistanceBetweenStirrups)+" cm"+ "\n"
         else:
             if self.verticalHatil.maximumShearForce > Vres:
                 #print("Hatil's sizes must extend.")
@@ -238,15 +239,15 @@ class GeneralCalculator:
 
 
 
-verticalHatil = VerticalHatil(20, 4.1, 3)
-concrete = Concrete("C25")
-steel = ReinforcementSteel("S420", "ø12", "ø8", 20)
-wall = Wall(15, 0.5, 8.2)
-plaster = Plaster(2, 1.8)
-earthquake = Earthquake(0.4, 1)
-reinforcedConcreteDensity = ReinforcedConcreteDensity()
-concreteCover = ConcreteCover(3)
-heightParameter = HeightParameter(-5, 10)
+# verticalHatil = VerticalHatil(20, 4.1, 3)
+# concrete = Concrete("C25")
+# steel = ReinforcementSteel("S420", "ø12", "ø8", 20)
+# wall = Wall(15, 0.5, 8.2)
+# plaster = Plaster(2, 1.8)
+# earthquake = Earthquake(0.4, 1)
+# reinforcedConcreteDensity = ReinforcedConcreteDensity()
+# concreteCover = ConcreteCover(3)
+# heightParameter = HeightParameter(-5, 10)
 
 
 # calculator = GeneralCalculator()
