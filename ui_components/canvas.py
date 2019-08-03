@@ -13,6 +13,8 @@ class CanvasWall(ttk.Frame):
         self.canvas.grid(row=0, column =1, rowspan = 60, columnspan=2)
 
         self.drawingFactor = 2
+        self.H1State = False
+        self.H2State = False
 
         self._define_wall()    # setup wall dimensions and appearance
         self._define_vertical_hatil()  # setup vertical hatil dimensions and appearance
@@ -75,6 +77,18 @@ class CanvasWall(ttk.Frame):
             'active': {'fill': 'red'}
         }
         self.canvas.horizontalHatil2Info = horizontalHatil
+
+    def setH1Active(self):
+        self.H1State = True
+
+    def setH1Passive(self):
+        self.H1State = False
+
+    def setH2Active(self):
+        self.H2State = True
+
+    def setH2Passive(self):
+        self.H2State = False
 
     # ================================================================================
     # Canvas bindings
@@ -289,13 +303,16 @@ class CanvasWall(ttk.Frame):
                            outline='black', width=1, fill='white',
                            tags=('verticalHatil', 'box'))
 
+
         # HORIZONTAL HATIL 1 SECTION
-        c.create_line(v['x1'], v['y']-10*df*hh1['z'], v['x1'] + v['wallWidth']*10*df, v['y']-10*df*hh1['z'],
-                      fill='#333', width=10*df*hh1['thickness'])
+        if(self.H1State):
+            c.create_line(v['x1'], v['y']-10*df*hh1['z'], v['x1'] + v['wallWidth']*10*df, v['y']-10*df*hh1['z'],
+                        fill='#333', width=10*df*hh1['thickness'])
 
         # HORIZONTAL HATIL 2 SECTION
-        c.create_line(v['x1'], v['y']-10*df*hh2['z'], v['x1'] + v['wallWidth']*10*df, v['y']-10*df*hh2['z'],
-                      fill='#333', width=10*df*hh1['thickness'])
+        if(self.H2State):
+            c.create_line(v['x1'], v['y']-10*df*hh2['z'], v['x1'] + v['wallWidth']*10*df, v['y']-10*df*hh2['z'],
+                        fill='#333', width=10*df*hh1['thickness'])
 
         # THICKNESS
         c.create_line(v['x1']+ (vH['x']-vH['thickness']/2)*df*10, v['y']-v['wallHeight']*df*10+10, v['x1'] + (vH['x']+vH['thickness']/2)*df*10, v['y']-v['wallHeight']*df*10+10,

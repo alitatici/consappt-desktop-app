@@ -19,21 +19,26 @@ class Window:
             self.hh1Location.config(state="enabled")
             self.hh1Length.config(state="enabled")
             self.hh2State.configure(state="normal")
+            self.designFrame.setH1Active()
         else:
             self.hh1Thickness.config(state="disabled")
             self.hh1Location.config(state="disabled")
             self.hh1Length.config(state="disabled")
             self.hh2State.configure(state="disabled")
+            self.designFrame.setH1Passive()
+            self.designFrame.setH2Passive()
 
     def controlH2EntryState(self):
         if self.hh2Active.get() == 1:
             self.hh2Thickness.config(state="enabled")
             self.hh2Location.config(state="enabled")
             self.hh2Length.config(state="enabled")
+            self.designFrame.setH2Active()
         else:
             self.hh2Thickness.config(state="disabled")
             self.hh2Location.config(state="disabled")
             self.hh2Length.config(state="disabled")
+            self.designFrame.setH2Passive()
 
 
     def func(self, evt):
