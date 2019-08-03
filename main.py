@@ -66,8 +66,9 @@ class Window:
         if self.hh2Active.get() == 1:
             pass
         elif self.hh1Active.get() == 1:
-            calculator = GeneralCalculatorForOneHorizontal()
-            string = calculator.calculateOneHorizontal(self.verticalHatil, self.concrete, self.steel, self.wall, self.plaster,
+            self.horizontalHatil1 = HorizontalHatil(float(self.hh1Thickness.get()), float(self.hh1Location.get()))
+            calculator2 = GeneralCalculatorForOneHorizontal()
+            string = calculator2.calculateOneHorizontal(self.verticalHatil, self.horizontalHatil1, self.concrete, self.steel, self.wall, self.plaster,
             self.earthquake, self.reinforcedConcreteDensity, self.concreteCover, self.heightParameter)
         else:
             calculator = GeneralCalculator()

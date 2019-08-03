@@ -15,7 +15,6 @@ class GeneralCalculatorForOneHorizontal:
         self.earthquake = None
         self.reinforcedConcreteDensity = None
         self.concreteCover = None
-        self.calculatedValues = None
         self.heightParameter = None
         self.report = ""
 
@@ -44,6 +43,8 @@ class GeneralCalculatorForOneHorizontal:
         self.calculateShearStirrupsOfHorizontalHatil()
         self.calculateShearStirrupsOfVerticalHatil()
         print(self.report)
+
+        return (self.report, self.report)
 
     #weight per unit area of wall; plaster multiple with 2 beacuse of plaster uses both sides of wall. Result unit: t/m^2
     def calculateWallWeightPerUnitArea(self):
