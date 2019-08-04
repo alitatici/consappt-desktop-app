@@ -514,19 +514,19 @@ class GeneralCalculatorForTwoHorizontal:
 
 
 
-verticalHatil = VerticalHatil(20, 4, 7)
-horizontalHatilBottom = HorizontalHatil(20, 2.3)
-horizontalHatilTop = HorizontalHatil(20, 4.7)
-concrete = Concrete("C25")
-steel = ReinforcementSteel("S420", "ø10", "ø8", 20)
-wall = Wall(20, 0.5, 8)
-plaster = Plaster(2, 1.8)
-earthquake = Earthquake(0.4, 1)
-reinforcedConcreteDensity = ReinforcedConcreteDensity()
-concreteCover = ConcreteCover(3)
-heightParameter = HeightParameter(-5, 10)
+# verticalHatil = VerticalHatil(20, 4, 7)
+# horizontalHatilBottom = HorizontalHatil(20, 2.3)
+# horizontalHatilTop = HorizontalHatil(20, 4.7)
+# concrete = Concrete("C25")
+# steel = ReinforcementSteel("S420", "ø10", "ø8", 20)
+# wall = Wall(20, 0.5, 8)
+# plaster = Plaster(2, 1.8)
+# earthquake = Earthquake(0.4, 1)
+# reinforcedConcreteDensity = ReinforcedConcreteDensity()
+# concreteCover = ConcreteCover(3)
+# heightParameter = HeightParameter(-5, 10)
 
 
-calculatorTwoHorizontal = GeneralCalculatorForTwoHorizontal()
-calculatorTwoHorizontal.calculateTwoHorizontal(verticalHatil, horizontalHatilBottom, horizontalHatilTop, concrete, steel, wall, plaster,
-earthquake, reinforcedConcreteDensity, concreteCover, heightParameter)
+# calculatorTwoHorizontal = GeneralCalculatorForTwoHorizontal()
+# calculatorTwoHorizontal.calculateTwoHorizontal(verticalHatil, horizontalHatilBottom, horizontalHatilTop, concrete, steel, wall, plaster,
+# earthquake, reinforcedConcreteDensity, concreteCover, heightParameter)
