@@ -111,6 +111,7 @@ class GeneralCalculator:
         discriminant = (b*b) - (4*a*c) 
 
         root = 0
+        x1=x2=0
 
         if discriminant > 0:
             x1 = (- b + math.sqrt(discriminant)) / (2 * a)
@@ -126,6 +127,7 @@ class GeneralCalculator:
         else:
             print("Root not found\n")
             root = None
+            return "Root not found\n"
 
 
         temp = self.concrete.k1 * self.concrete.fcd *  self.verticalHatil.thickness * 10 * root / (self.steel.fyd*100)

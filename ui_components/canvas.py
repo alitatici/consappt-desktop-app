@@ -189,12 +189,15 @@ class CanvasWall(ttk.Frame):
 
     def set_wallWidth(self, width):
         v = self.canvas.wallInfo
+        df = self.drawingFactor
         if width < 2:
             v['wallWidth'] = 2
         elif width > 20:
             v['wallWidth'] = 20
         else:
             v['wallWidth'] = width
+        
+        v['x1'] = 400 - df*10*v['wallWidth']/2
         self._wall_setup(None)
 
     def _move_verticalHatil(self, evt):
