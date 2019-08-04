@@ -322,34 +322,82 @@ class CanvasWall(ttk.Frame):
 
         # HORIZONTAL HATIL 1 SECTION
         if(self.H1State):
+            # hatil 1 itself
             c.create_line(v['x1'], v['y']-10*df*hh1['z'], v['x1'] + v['wallWidth']*10*df, v['y']-10*df*hh1['z'],
                         fill='#333', width=10*df*hh1['thickness'])
 
+            # hatil 1 location from bottom
+            c.create_line(v['x1'] + v['wallWidth']*df*10+10, v['y'], v['x1'] + v['wallWidth']*df*10+10, v['y']-10*df*(hh1['z']-hh1['thickness']/2),
+            arrow=BOTH, arrowshape=arrowShape)
+
+            c.create_text(v['x1'] + v['wallWidth']*df*10+40, v['y']-10*df*((hh1['z']-hh1['thickness']/2)/2),
+            text="{0:.2f}".format(hh1['z']-hh1['thickness']/2), anchor=E)
+
+            # hatil 1 thickness
+            c.create_line(v['x1'] + v['wallWidth']*df*10+10, v['y']-10*df*(hh1['z']-hh1['thickness']/2), v['x1'] + v['wallWidth']*df*10+10, v['y']-10*df*(hh1['z']+hh1['thickness']/2),
+            arrow=BOTH, arrowshape=arrowShape, fill='white')
+
+            c.create_text(v['x1'] + v['wallWidth']*df*10+40, v['y']-10*df*(hh1['z']),
+            text="{0:.2f}".format(hh1['thickness']), anchor=E, fill='white')
+
+            if self.H2State == False:
+                # hatil 1 location from top
+                c.create_line(v['x1'] + v['wallWidth']*df*10+10, v['y']-10*df*(hh1['z']+hh1['thickness']/2), v['x1'] + v['wallWidth']*df*10+10, v['y']-v['wallHeight']*df*10,
+                arrow=BOTH, arrowshape=arrowShape)
+
+                c.create_text(v['x1'] + v['wallWidth']*df*10+40, v['y']-10*df*((v['wallHeight'] + hh1['z']+hh1['thickness']/2)/2),
+                text="{0:.2f}".format(v['wallHeight'] - hh1['z']-hh1['thickness']/2), anchor=E)
+
+
+
         # HORIZONTAL HATIL 2 SECTION
         if(self.H2State):
+            # hatil 2 itself
             c.create_line(v['x1'], v['y']-10*df*hh2['z'], v['x1'] + v['wallWidth']*10*df, v['y']-10*df*hh2['z'],
-                        fill='#333', width=10*df*hh1['thickness'])
+                        fill='#333', width=10*df*hh2['thickness'])
+            # hatil 1 - hatil 2 range
+            c.create_line(v['x1'] + v['wallWidth']*df*10+10, v['y']-10*df*(hh1['z']+hh1['thickness']/2), v['x1'] + v['wallWidth']*df*10+10, v['y']-10*df*(hh2['z']-hh2['thickness']/2),
+            arrow=BOTH, arrowshape=arrowShape)
+
+            c.create_text(v['x1'] + v['wallWidth']*df*10+40, v['y']-10*df*((hh1['z']+hh2['z'])/2),
+            text="{0:.2f}".format(hh2['z']-hh1['z']-(hh1['thickness']+hh2['thickness'])/2), anchor=E)
+
+            # hatil 2 thickness
+            c.create_line(v['x1'] + v['wallWidth']*df*10+10, v['y']-10*df*(hh2['z']-hh2['thickness']/2), v['x1'] + v['wallWidth']*df*10+10, v['y']-10*df*(hh2['z']+hh2['thickness']/2),
+            arrow=BOTH, arrowshape=arrowShape, fill='white')
+
+            c.create_text(v['x1'] + v['wallWidth']*df*10+40, v['y']-10*df*(hh2['z']),
+            text="{0:.2f}".format(hh2['thickness']), anchor=E, fill='white')
+
+            # hatil 2 - top
+            c.create_line(v['x1'] + v['wallWidth']*df*10+10, v['y']-10*df*(hh2['z']+hh2['thickness']/2), v['x1'] + v['wallWidth']*df*10+10, v['y']-v['wallHeight']*df*10,
+            arrow=BOTH, arrowshape=arrowShape)
+
+            c.create_text(v['x1'] + v['wallWidth']*df*10+40, v['y']-10*df*((v['wallHeight'] + hh2['z']+hh2['thickness']/2)/2),
+            text="{0:.2f}".format(v['wallHeight'] - hh2['z']-hh2['thickness']/2), anchor=E)
+
+            
 
         # THICKNESS
-        c.create_line(v['x1']+ (vH['x']-vH['thickness']/2)*df*10, v['y']-v['wallHeight']*df*10+10, v['x1'] + (vH['x']+vH['thickness']/2)*df*10, v['y']-v['wallHeight']*df*10+10,
+        c.create_line(v['x1']+ (vH['x']-vH['thickness']/2)*df*10, v['y']-v['wallHeight']*df*10-10, v['x1'] + (vH['x']+vH['thickness']/2)*df*10, v['y']-v['wallHeight']*df*10-10,
                       arrow=BOTH, arrowshape=arrowShape, fill='white')
 
         c.create_text(v['x1'] + vH['x']*df*10+5,
-                      v['y']-v['wallHeight']*df*10+25, text=vH['thickness'], anchor=E, fill='white')
+                      v['y']-v['wallHeight']*df*10-25, text="{0:.2f}".format(vH['thickness']), anchor=E, fill='white')
 
         # FROM LEFT
-        c.create_line(v['x1'], v['y']-v['wallHeight']*df*10-10, v['x1'] + vH['x']*df*10, v['y']-v['wallHeight']*df*10-10,
+        c.create_line(v['x1'], v['y']-v['wallHeight']*df*10-10, v['x1'] + (vH['x']-vH['thickness']/2)*df*10, v['y']-v['wallHeight']*df*10-10,
                       arrow=BOTH, arrowshape=arrowShape)
         c.create_text((v['x1']+(10*vH['x']*df)/2),
-                      v['y']-v['wallHeight']*df*10-25, text="{0:.3f}".format(vH['x']), anchor=E)
+                      v['y']-v['wallHeight']*df*10-25, text="{0:.2f}".format(vH['x']-vH['thickness']/2), anchor=E)
 
         # FROM RIGHT
-        c.create_line(v['x1'] + vH['x']*df*10, v['y']-v['wallHeight']*df*10-10, v['x1'] + v['wallWidth']*df*10, v['y']-v['wallHeight']*df*10-10,
+        c.create_line(v['x1'] + (vH['x']+vH['thickness']/2)*df*10, v['y']-v['wallHeight']*df*10-10, v['x1'] + v['wallWidth']*df*10, v['y']-v['wallHeight']*df*10-10,
                       arrow=BOTH, arrowshape=arrowShape)
 
         length = ((v['wallWidth']-vH['x'])*df*10) /2
         c.create_text(v['x1'] + vH['x']*df*10 + length,
-                      v['y']-v['wallHeight']*df*10-25, text="{0:.3f}".format(v['wallWidth'] - vH['x']), anchor=E)
+                      v['y']-v['wallHeight']*df*10-25, text="{0:.2f}".format(v['wallWidth'] - vH['x']-vH['thickness']/2), anchor=E)
 
         # if a reshape box is selected, set it to 'active' style
         for t in tags:
