@@ -5,6 +5,7 @@ from beam import *
 from ttkthemes import themed_tk as tk
 from calculations import *
 from calculationOfOneHorizontal import *
+from calculationOfTwoHorizontal import *
 import math
 
 class Window:
@@ -73,7 +74,11 @@ class Window:
         self.concreteCover = ConcreteCover(float(self.ccT.get()))
         self.heightParameter = HeightParameter(float(self.hpFromBasement.get()), float(self.hpMax.get()))
         if self.hh2Active.get() == 1:
-            pass
+            self.horizontalHatil1 = HorizontalHatil(float(self.hh1Thickness.get()), float(self.hh1Location.get()))
+            self.horizontalHatil2 = HorizontalHatil(float(self.hh2Thickness.get()), float(self.hh2Location.get()))
+            calculator3 = GeneralCalculatorForTwoHorizontal()
+            string = calculator3.calculateTwoHorizontal(self.verticalHatil, self.horizontalHatil1, self.horizontalHatil2, self.concrete, self.steel, self.wall, self.plaster,
+            self.earthquake, self.reinforcedConcreteDensity, self.concreteCover, self.heightParameter)
         elif self.hh1Active.get() == 1:
             self.horizontalHatil1 = HorizontalHatil(float(self.hh1Thickness.get()), float(self.hh1Location.get()))
             calculator2 = GeneralCalculatorForOneHorizontal()
