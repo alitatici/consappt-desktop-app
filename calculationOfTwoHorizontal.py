@@ -520,7 +520,7 @@ class GeneralCalculatorForTwoHorizontal:
 # horizontalHatilTop = HorizontalHatil(20, 4.7)
 # concrete = Concrete("C25")
 # steel = ReinforcementSteel("S420", "ø10", "ø8", 20)
-# wall = Wall(20, 0.5, 8)
+# wall = Wall(25, 0.5, 8)
 # plaster = Plaster(2, 1.8)
 # earthquake = Earthquake(0.4, 1)
 # reinforcedConcreteDensity = ReinforcedConcreteDensity()
