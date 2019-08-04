@@ -60,7 +60,7 @@ class GeneralCalculatorForOneHorizontal:
         load += self.horizontalHatil.thickness/100 * self.wall.thickness/100 * (self.wall.width - self.verticalHatil.thickness/100) * self.reinforcedConcreteDensity.reinforcedConcreteDensity
         load /= self.wall.width
         load = round(load, 3)
-        if (load / self.wall.width) > 0.7:
+        if load > 0.7:
             #print("need support to bottom of wall. (>700kg/m)")
             self.report += "Weight per meter of wall: "+ str(load) + " t/m. Need support to bottom of wall. (>700kg/m)\n"
         else:

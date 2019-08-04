@@ -164,6 +164,7 @@ class Earthquake:
 
 class CalculatedValues:
     wallLinearWeight = 0
+    wallLinearWeight2= 0
     wallWeightPerUnitArea = 0 
     ratioOfSpans = 0
     reinforcementAmount=0
