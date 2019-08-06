@@ -4,7 +4,7 @@ import math
 class GeneralCalculatorForTwoHorizontal:
 
     def __init__(self):
-        print("calculatorOneHorizontal Initialized")
+        print("calculatorTwoHorizontal Initialized")
         self.calculatedValues = CalculatedValues()
         self.verticalHatil = None
         self.horizontalHatilBottom = None
