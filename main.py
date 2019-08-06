@@ -238,11 +238,11 @@ class Window:
             ttk.Label(self.wallEntry, text=" Length(m):").grid(row =1, column = 12, columnspan=2, sticky=(W,E))
 
             self.wallThickness = ttk.Entry(self.wallEntry)
-            self.wallThickness.insert(END, "22.5")
+            self.wallThickness.insert(END, "20")
             self.wallDensity = ttk.Entry(self.wallEntry)
             self.wallDensity.insert(END, "0.5")
             self.wallWidth = ttk.Entry(self.wallEntry)
-            self.wallWidth.insert(END, "8.2")
+            self.wallWidth.insert(END, "8")
             self.vhLength = ttk.Entry(self.wallEntry)
             self.vhLength.insert(END, "4")
 
@@ -281,7 +281,7 @@ class Window:
             self.vhThickness = ttk.Entry(self.verticalHatilEntry)
             self.vhThickness.insert(END, "20")
             self.vhLocation = ttk.Entry(self.verticalHatilEntry)
-            self.vhLocation.insert(END, "4.1")
+            self.vhLocation.insert(END, "4")
 
 
             self.vhThickness.grid(row=1, column=2, columnspan=2)
@@ -299,7 +299,7 @@ class Window:
             self.hh1Thickness = ttk.Entry(self.horizontalHatil1Entry, state="disabled")
             self.hh1Thickness.insert(END, "20")
             self.hh1Location = ttk.Entry(self.horizontalHatil1Entry, state="disabled")
-            self.hh1Location.insert(END, "4.1")
+            self.hh1Location.insert(END, "3")
 
             self.hh1Active = IntVar()
             self.hh1State= ttk.Checkbutton(self.horizontalHatil1Entry, text="Add",
@@ -321,7 +321,7 @@ class Window:
             self.hh2Thickness = ttk.Entry(self.horizontalHatil2Entry, state="disabled")
             self.hh2Thickness.insert(END, "20")
             self.hh2Location = ttk.Entry(self.horizontalHatil2Entry, state="disabled")
-            self.hh2Location.insert(END, "4.1")
+            self.hh2Location.insert(END, "6")
 
             self.hh2Active = IntVar()
             self.hh2State = ttk.Checkbutton(self.horizontalHatil2Entry, text="Add", variable=self.hh2Active,
